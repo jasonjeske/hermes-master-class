@@ -1,0 +1,73 @@
+# License
+
+This repository contains two kinds of material with two different statuses.
+Read both sections before reusing anything.
+
+---
+
+## 1. Original contributions: Creative Commons Attribution 4.0 International
+
+Everything produced for this compilation is released under **CC BY 4.0**.
+You may share and adapt it, including commercially, provided you give
+appropriate credit, link to the license, and indicate if changes were made.
+
+Canonical legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+This covers:
+
+- The 13 illustrations in `assets/art/`
+- All 24 workflow diagrams
+- The consolidated reference tables, including the constants table
+  (Appendix C) and the failure-triage table (Appendix D)
+- The vocabulary table and the twelve operator drills
+- The 30/60/90 adoption path (Appendix E)
+- Appendices F, G and H in full: the SOUL.md and USER.md guidance and
+  worked files, the skills and plugins examples, and the worked build
+  prompts and template
+- The structural editing, cross-references and section organization
+
+Attribution for this layer: **Jason Jeske**, from the repository
+`jasonjeske/hermes-master-class`.
+
+---
+
+## 2. Underlying source material: not licensed by this repository
+
+The substance of Parts 1 through 12 is the work of **Tony Simons**
+([@tonysimons_](https://x.com/tonysimons_)), published as the twelve-part
+*Hermes Agent Master Class* on X between July 5 and July 20, 2026.
+
+He published it free and without a paywall, and it is reproduced here as a
+study reference with credit. That is the extent of what this repository
+asserts. **It does not relicense his work, and CC BY 4.0 above does not
+extend to it.** Rights in the underlying articles remain entirely with their
+author.
+
+If you want to reuse the source material itself rather than this
+compilation's additions, the source articles are linked per-part in
+[Appendix I](masterclass/appendix-i-sources.md), and the author is the person
+to ask.
+
+The original article artwork is deliberately not reproduced anywhere in this
+repository.
+
+---
+
+## 3. Build tooling: MIT
+
+The scripts and stylesheets in `build/` are released under the MIT License.
+See [LICENSE-CODE](LICENSE-CODE).
+
+## 4. Bundled third-party code
+
+The single-file HTML bundles Mermaid, which carries its own MIT license.
+See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+---
+
+## 5. Not affiliated
+
+Hermes Agent is a project of Nous Research. This repository is an unofficial
+study reference and is not affiliated with, endorsed by, or maintained by
+Nous Research or by the author of the source series.

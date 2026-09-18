@@ -1,0 +1,89 @@
+/* Print variant: light ground, large type, the art plates stay dark as figures. */
+:root{
+  --ink:#10151f; --ink-soft:#3c4757; --ink-dim:#6b7789;
+  --bg:#ffffff; --bg-2:#f5f7fa; --bg-3:#eef2f7;
+  --line:#d7dee8; --line-2:#b9c4d2;
+  --cyan:#1668a8; --cyan-2:#12557f; --gold:#8a6410;
+  --measure:none;
+  --sans:"Inter","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);
+     font-size:13pt;line-height:1.62;-webkit-font-smoothing:antialiased}
+.progress{display:none}
+.wrap{max-width:none;margin:0;padding:0}
+
+.mast{padding:0 0 18pt}
+.kicker{font-family:var(--mono);font-size:9pt;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:10pt}
+.mast h1{font-size:40pt;line-height:1.04;letter-spacing:-.02em;margin:0 0 12pt;font-weight:800}
+.mast .sub{font-size:16pt;line-height:1.4;color:var(--ink-soft);max-width:34ch;margin:0 0 16pt;font-weight:400}
+.why{border-left:3pt solid var(--gold);padding:8pt 0 8pt 14pt;color:var(--ink-soft);font-size:12pt}
+.why b{color:var(--ink)}
+.hero{margin:20pt 0 0;border:1px solid var(--line);border-radius:5pt;overflow:hidden;line-height:0}
+.hero img{width:100%;height:auto;display:block}
+
+section{break-before:page}
+section:first-of-type{break-before:auto}
+.sec-banner{margin:0 0 14pt;border:1px solid var(--line);border-radius:5pt;overflow:hidden;line-height:0;break-inside:avoid}
+.sec-banner img{width:100%;height:auto;display:block}
+h2{font-size:26pt;line-height:1.12;letter-spacing:-.015em;margin:0 0 14pt;font-weight:800;break-after:avoid}
+h2 .num{display:block;font-family:var(--mono);font-size:9pt;letter-spacing:.2em;color:var(--cyan);
+        font-weight:500;margin-bottom:7pt;text-transform:uppercase}
+h3{font-size:16.5pt;line-height:1.25;margin:22pt 0 8pt;font-weight:700;break-after:avoid;break-inside:avoid}
+p{margin:0 0 11pt;orphans:2;widows:2}
+p strong,li strong{color:#000;font-weight:650}
+a{color:var(--cyan-2);text-decoration:none}
+ul,ol{margin:0 0 12pt;padding-left:18pt}
+li{margin-bottom:5pt}
+hr{border:0;border-top:1px solid var(--line);margin:20pt 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--bg-3);border:1px solid var(--line);
+     border-radius:3pt;padding:1pt 4pt;color:var(--cyan-2)}
+
+.tablewrap{margin:0 0 14pt;break-inside:auto}
+table{border-collapse:collapse;width:100%;font-size:11pt;line-height:1.45}
+caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:9pt;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--cyan);padding-bottom:7pt}
+thead{display:table-header-group}
+th{text-align:left;font-family:var(--mono);font-size:9pt;letter-spacing:.1em;text-transform:uppercase;
+   color:var(--ink-dim);font-weight:500;padding:7pt 12pt 7pt 0;border-bottom:1.5px solid var(--line-2)}
+td{padding:8pt 12pt 8pt 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft)}
+td:first-child{color:var(--ink);font-weight:550}
+tr{break-inside:avoid}
+
+.callout{margin:0 0 14pt;padding:12pt 16pt;border-radius:5pt;background:var(--bg-2);
+         border:1px solid var(--line);border-left:3pt solid var(--cyan);font-size:12pt;break-inside:avoid}
+.callout .ct{font-family:var(--mono);font-size:9pt;letter-spacing:.12em;text-transform:uppercase;
+             color:var(--cyan);margin-bottom:6pt;font-weight:500}
+.callout p:last-child{margin-bottom:0}
+.callout.warn{border-left-color:var(--gold)} .callout.warn .ct{color:var(--gold)}
+.callout.success{border-left-color:#1a7a4a} .callout.success .ct{color:#1a7a4a}
+
+.codeblk{margin:0 0 14pt;border:1px solid var(--line);border-radius:5pt;overflow:hidden;
+         background:var(--bg-2);break-inside:avoid}
+.codeblk .fname{font-family:var(--mono);font-size:9.5pt;color:var(--ink-dim);padding:6pt 12pt;
+                border-bottom:1px solid var(--line);background:var(--bg-3)}
+.codeblk pre{margin:0;padding:11pt 14pt;font-family:var(--mono);font-size:9.5pt;line-height:1.6;
+             color:#1c2635;white-space:pre-wrap;word-break:break-word}
+.codeblk code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+
+.check{margin:0 0 14pt;padding:0;list-style:none}
+.check li{position:relative;padding-left:22pt;margin-bottom:6pt}
+.check li::before{content:"";position:absolute;left:0;top:.36em;width:11pt;height:11pt;border-radius:2pt;border:1.2pt solid var(--line-2)}
+.check li.done::before{background:var(--cyan);border-color:var(--cyan)}
+.check li.done::after{content:"";position:absolute;left:3.6pt;top:.52em;width:3pt;height:6pt;
+                      border-right:1.6pt solid #fff;border-bottom:1.6pt solid #fff;transform:rotate(42deg)}
+
+.figure{margin:0 0 16pt;border:1px solid var(--line);border-radius:6pt;background:var(--bg-2);
+        overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+/* the caption must never be placed without its diagram: no independent break
+   rules on the inner nodes, or the box lands on one page and the art on the next */
+.figure .cap,.figure .mermaid,.figure .mermaid svg{break-inside:auto;break-before:auto;break-after:auto}
+.figure .cap{break-after:avoid}
+/* a diagram taller than the printable column scales down rather than stranding a page */
+.figure .mermaid svg{max-height:195mm;width:auto}
+.figure .cap{font-family:var(--mono);font-size:9pt;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);
+             padding:7pt 14pt;border-bottom:1px solid var(--line);background:var(--bg-3)}
+.figure .mermaid{padding:14pt;text-align:center}
+.figure .mermaid svg{max-width:100%;height:auto}
+@page{ size:Letter; margin:15mm 14mm 17mm 14mm; }
