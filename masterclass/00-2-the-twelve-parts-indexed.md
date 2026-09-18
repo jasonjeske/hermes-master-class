@@ -15,6 +15,8 @@
 | 11 | The Admin Layer | A profile is a whole independent agent, not a config preset | Clone a profile and prove isolation |
 | 12 | What Breaks and What to Skip | Context is the first wall; integrations fail silently | Build the weekly tool-surface canary |
 
+The second half of the document is indexed at the top of the Build Track, which lists all ten builds with what each one leaves you holding and the documentation page it was checked against.
+
 ### Vocabulary, front-loaded
 
 The series uses these terms from Part 1 onward. Knowing them before you start saves rereading.

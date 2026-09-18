@@ -18,7 +18,7 @@ A kanban workspace is a SQLite database at `~/.hermes/kanban/`. It stores tasks 
 | in_progress | A profile has claimed it and is working |
 | review | Work is done and awaiting validation |
 | done | Finished |
-| cancelled | No longer makes sense |
+| canceled | No longer makes sense |
 
 Each task has an **assignee field that maps to a Hermes profile**. When a profile picks up a task it claims ownership, and other profiles can see who is working on what and avoid duplicating effort. Priority ranks tasks within a state; tags group related tasks. The agent filters by state, priority, tags or assignee to find exactly the work it should be doing.
 

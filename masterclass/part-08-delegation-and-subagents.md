@@ -44,7 +44,7 @@ Restricting the toolset also **reduces token consumption**. A research child wit
 
 ### The async model
 
-The original delegation tool blocked the parent chat while children ran. You fired three research subagents and sat watching a spinner. If a child got stuck you either waited it out or cancelled the whole batch.
+The original delegation tool blocked the parent chat while children ran. You fired three research subagents and sat watching a spinner. If a child got stuck you either waited it out or canceled the whole batch.
 
 **Async subagents fixed this.** `delegate_task_async` fires a subagent and returns immediately. You keep working.
 

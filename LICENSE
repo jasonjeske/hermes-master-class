@@ -16,8 +16,10 @@ Human-readable summary: https://creativecommons.org/licenses/by/4.0/
 
 This covers:
 
-- The 13 illustrations in `assets/art/`
-- All 24 workflow diagrams
+- The 14 illustrations in `assets/art/`
+- All 26 diagram plates in `assets/art/`
+- The whole of the Build Track: the introduction, Builds 0 through 10,
+  the ledger, and every prompt, template, config block and table in them
 - The consolidated reference tables, including the constants table
   (Appendix C) and the failure-triage table (Appendix D)
 - The vocabulary table and the twelve operator drills
@@ -52,21 +54,22 @@ to ask.
 The original article artwork is deliberately not reproduced anywhere in this
 repository.
 
+The Build Track quotes short passages of the official Hermes Agent
+documentation and of one bundled skill file from the Hermes Agent repository
+where a template had to match the documented shape exactly. Hermes Agent is
+published by Nous Research under the MIT License; those passages remain
+theirs and are credited in Appendix I.
+
 ---
 
 ## 3. Build tooling: MIT
 
-The scripts and stylesheets in `build/` are released under the MIT License.
+The scripts in `tools/` are released under the MIT License.
 See [LICENSE-CODE](LICENSE-CODE).
-
-## 4. Bundled third-party code
-
-The single-file HTML bundles Mermaid, which carries its own MIT license.
-See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ---
 
-## 5. Not affiliated
+## 4. Not affiliated
 
 Hermes Agent is a project of Nous Research. This repository is an unofficial
 study reference and is not affiliated with, endorsed by, or maintained by

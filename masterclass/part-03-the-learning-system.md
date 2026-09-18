@@ -10,7 +10,7 @@ Hermes does. Not because the model trains on your data, but because of three sys
 
 ### Memory is the raw material
 
-Memory in Hermes is not a log of everything that happened. It is a small, curated set of facts the agent keeps in context at all times, held in two files.
+Memory in Hermes is not a log of everything that happened. It is a small, curated set of facts the agent keeps in context at all times, held in two files under `~/.hermes/memories/`.
 
 **The**
 

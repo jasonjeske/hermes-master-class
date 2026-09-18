@@ -19,6 +19,19 @@
 - **[Part 10](#user-content-part-10-kanban-as-a-coordination-model)** Kanban as a Coordination Model
 - **[Part 11](#user-content-part-11-the-admin-layer)** The Admin Layer
 - **[Part 12](#user-content-part-12-what-breaks-what-to-skip-how-to-stay-sane)** What Breaks, What to Skip, How to Stay Sane
+- [The Build Track: Ten Builds, One Agent](#user-content-the-build-track-ten-builds-one-agent)
+- **[Build 0](#user-content-build-0-day-one)** Day One
+- **[Build 1](#user-content-build-1-soulmd)** SOUL.md
+- **[Build 2](#user-content-build-2-usermd-and-memorymd)** USER.md and MEMORY.md
+- **[Build 3](#user-content-build-3-project-context)** Project Context
+- **[Build 4](#user-content-build-4-skills)** Skills
+- **[Build 5](#user-content-build-5-plugins)** Plugins
+- **[Build 6](#user-content-build-6-the-memory-stack)** The Memory Stack
+- **[Build 7](#user-content-build-7-profiles)** Profiles
+- **[Build 8](#user-content-build-8-cron)** Cron
+- **[Build 9](#user-content-build-9-delegation-and-kanban)** Delegation and Kanban
+- **[Build 10](#user-content-build-10-tuning-and-safety)** Tuning and Safety
+- [The Build Ledger](#user-content-the-build-ledger)
 - **[Appendix A](#user-content-appendix-a-complete-command-index)** Complete Command Index
 - **[Appendix B](#user-content-appendix-b-every-path-and-what-lives-there)** Every Path and What Lives There
 - **[Appendix C](#user-content-appendix-c-every-number-in-one-table)** Every Number in One Table
@@ -33,17 +46,17 @@
 
 ## Orientation
 
-This document is the whole of Tony Simons' twelve-part **Hermes Agent Master Class**, published on X between July 5 and July 20, 2026, combined into one offline reference and drilled deeper at every part.
+This document is the whole of Tony Simons' twelve-part **Hermes Agent Master Class**, published on X between July 5 and July 20, 2026, combined into one reference and drilled deeper at every part. It then keeps going: a second half, the **Build Track**, turns the twelve parts into ten builds you can do with prompts you paste as they are, every one of them written against the official Hermes documentation.
 
 Nothing from the original is dropped. Every mechanism the series names is here, every figure the author drew is here, and on top of that each part carries three additions that the serialized format could not give you:
 
-- **A mechanism diagram.** The series describes the agent loop, the cron tick, the delegation tree and the profile boundary in prose. Here each one is also a real graph you can read in five seconds.
+- **A mechanism plate.** The series describes the agent loop, the cron tick, the delegation tree and the profile boundary in prose. Here each one is also drawn as a single plate you can read in five seconds.
 - **Reference tables.** Numbers scattered across a paragraph (iteration budgets, compression thresholds, curator timers, token costs) are pulled into tables you can look up later without rereading the prose.
 - **An operator drill.** One concrete exercise per part. Reading about the agent loop teaches you nothing you can use on Tuesday. Running a command that proves the loop behaved the way the article said it would is what makes it yours.
 
 > 📝 **Whose words are whose**
 >
-> The substance and the structure are Tony Simons' work, sourced from the articles linked in Appendix I. The original article artwork is not reproduced; every illustration and diagram here was produced for this compilation, as were the tables, the operator drills, the cross-references and the three configuration appendices. Where an addition makes a claim the series did not, it is marked as an addition rather than blended into the source material.
+> The substance and the structure are Tony Simons' work, sourced from the articles linked in Appendix I. The original article artwork is not reproduced; every illustration and diagram here was produced for this compilation, as were the tables, the operator drills, the cross-references and the three configuration appendices. Where an addition makes a claim the series did not, it is marked as an addition rather than blended into the source material. The Build Track is an addition in its entirety: its prompts, templates and config blocks were written for this masterclass from the official Hermes documentation and the bundled files in the Hermes repository, and each build names the page it was checked against.
 
 ### How to read this
 
@@ -55,8 +68,9 @@ There are three honest ways through this document and they suit different weeks.
 | Operator | Foundation plus Parts 4, 6, 7, 12 and Appendix F | About 90 minutes | Someone running Hermes daily who wants it running without them |
 | Full stack | All twelve parts plus every appendix | Half a day | Someone building multi-agent infrastructure on Hermes |
 | Configure it | Appendices F, G and H on their own | About 25 minutes | Someone who wants the identity files, a first skill, and a prompt that produces a working system |
+| Build it | The Build Track, Builds 0 to 10, in order | Ten sessions of 30 to 90 minutes | Someone who wants a working, documented Hermes setup from copy-paste prompts, with memory, skills, profiles and cron all in place |
 
-The parts genuinely build. Part 3 assumes Part 2's session persistence actually works. Part 6 assumes Part 4's skills exist. Part 10 assumes Part 11's profiles. Reading out of order is possible but each part will quietly reference a foundation you have not laid.
+The parts genuinely build, and so do the builds. Part 3 assumes Part 2's session persistence actually works. Part 6 assumes Part 4's skills exist. Part 10 assumes Part 11's profiles. Reading out of order is possible but each part will quietly reference a foundation you have not laid.
 
 ### The one sentence version
 
@@ -88,6 +102,8 @@ The dotted lines matter as much as the solid ones. Memory, skills, sessions and 
 | 10 | Kanban as a Coordination Model | A durable board is how multiple profiles coordinate without talking | Stand up a three-profile pipeline |
 | 11 | The Admin Layer | A profile is a whole independent agent, not a config preset | Clone a profile and prove isolation |
 | 12 | What Breaks and What to Skip | Context is the first wall; integrations fail silently | Build the weekly tool-surface canary |
+
+The second half of the document is indexed at the top of the Build Track, which lists all ten builds with what each one leaves you holding and the documentation page it was checked against.
 
 ### Vocabulary, front-loaded
 
@@ -305,7 +321,7 @@ Hermes does. Not because the model trains on your data, but because of three sys
 
 ### Memory is the raw material
 
-Memory in Hermes is not a log of everything that happened. It is a small, curated set of facts the agent keeps in context at all times, held in two files.
+Memory in Hermes is not a log of everything that happened. It is a small, curated set of facts the agent keeps in context at all times, held in two files under `~/.hermes/memories/`.
 
 **The**
 
@@ -846,7 +862,7 @@ Restricting the toolset also **reduces token consumption**. A research child wit
 
 ### The async model
 
-The original delegation tool blocked the parent chat while children ran. You fired three research subagents and sat watching a spinner. If a child got stuck you either waited it out or cancelled the whole batch.
+The original delegation tool blocked the parent chat while children ran. You fired three research subagents and sat watching a spinner. If a child got stuck you either waited it out or canceled the whole batch.
 
 **Async subagents fixed this.** `delegate_task_async` fires a subagent and returns immediately. You keep working.
 
@@ -1002,7 +1018,7 @@ A kanban workspace is a SQLite database at `~/.hermes/kanban/`. It stores tasks 
 | in_progress | A profile has claimed it and is working |
 | review | Work is done and awaiting validation |
 | done | Finished |
-| cancelled | No longer makes sense |
+| canceled | No longer makes sense |
 
 Each task has an **assignee field that maps to a Hermes profile**. When a profile picks up a task it claims ownership, and other profiles can see who is working on what and avoid duplicating effort. Priority ranks tasks within a state; tags group related tasks. The agent filters by state, priority, tags or assignee to find exactly the work it should be doing.
 
@@ -1255,6 +1271,1578 @@ The agent loop is the engine. The learning system is the fuel. The tools are the
 >
 > Write one cron job, in no-agent mode where possible, that exercises terminal, web and file once a week and reports only on failure using the `[SILENT]` pattern from Part 6. This single job converts the entire "integration fragility" section from a thing you have to remember into a thing the system tells you. It is the highest-value twenty minutes in this document.
 
+## The Build Track: Ten Builds, One Agent
+
+![The Build Track](../assets/art/build-track.webp)
+
+The twelve parts explain how Hermes works. This second half is where you build one. Ten builds, in the order the pieces depend on each other, each one a page you can work through top to bottom with prompts you paste as they are.
+
+Two rules shaped every prompt here, and they are worth knowing before you paste the first one.
+
+**Every prompt is Hermes-native.** The file paths, config keys, commands and tool names come from the official Hermes documentation and from the bundled files in the Hermes repository, and each build names the page it was checked against. Nothing here is a general "AI agent" recipe wearing a Hermes label. If a prompt asks the agent to edit a key, that key exists in `config.yaml`. If it names a tool, that tool is in the registry.
+
+**Every prompt reads the docs before it writes.** Hermes ships often and the model's memory of the project is always a version behind. So the prompts follow one shape, borrowed from the people who run Hermes hardest: tell the agent which documentation page to read, name the exact file and key to change, and require the diff before anything is saved. The agent has the web tools to fetch the page, the file tools to edit the config, and the terminal to prove the change took. That is the whole trick, and it is why these prompts keep working after the next release.
+
+![The shape of every prompt in the Build Track](../assets/art/d26.webp)
+
+| Build | You end up with | Checked against | Time |
+|---|---|---|---|
+| 0 | A working install, a chosen provider, and the daily command set in your hands | Quickstart, CLI reference | 30 minutes |
+| 1 | A SOUL.md that shapes behavior, plus personality overlays for the moods | Personality doc | 45 minutes |
+| 2 | USER.md and MEMORY.md seeded from an interview and from your machine | Memory doc, import doc | 45 minutes |
+| 3 | An AGENTS.md per project so the agent stops re-learning your repo | Context Files doc | 30 minutes |
+| 4 | Your first skills, a bundle, and a curator that keeps the library clean | Skills docs, Creating Skills guide | 60 minutes |
+| 5 | The right bundled plugins switched on, and the judgment for when to write one | Plugins docs | 30 minutes |
+| 6 | A four-layer memory: built-in, session search, one provider, an Obsidian vault | Memory Providers, Honcho docs | 90 minutes |
+| 7 | A profile roster with a frontier planner and inexpensive workers | Profiles doc | 45 minutes |
+| 8 | Cron jobs that brief themselves, stay silent when nothing is wrong, and cost nothing when no reasoning is needed | Cron doc | 60 minutes |
+| 9 | Delegation with a cheap child fleet, and a kanban board the profiles work from | Delegation and Kanban docs | 60 minutes |
+| 10 | Approvals, model routing, effort levels and a weekly maintenance habit | Configuration and Security docs | 45 minutes |
+
+### How to use a build
+
+Each build has the same four pieces. **What you are building** says what exists at the end. **What the docs say** is the short list of facts the build rests on, with the page named. **Prompts** are the blocks marked with a file name like `prompt-something.md`: paste the whole block into a Hermes chat, in the CLI, the TUI, or any gateway platform. **Commands** are the blocks marked `bash`: those run in your own terminal. Every build ends with a **verify** list, and a build is not done until that list passes.
+
+> ℹ️ **Where the prompts come from**
+>
+> The doc-first, diff-before-save shape is the pattern that shows up again and again in the best community material, in particular the "hand this to your agent" prompts published by Nous-affiliated operators on X. The template files, the roster, the memory ladder and the cron jobs were written for this masterclass from the documentation named in each build. The one exception is the nightly memory consolidation job in Build 6, which follows a pattern a community member described publicly; it is built entirely from documented Hermes primitives and is marked where it appears.
+
+> ⚠️ **Do the builds in order**
+>
+> Build 6 assumes Build 2's memory files exist. Build 8's cron jobs attach skills from Build 4 and deliver to a gateway from Build 0. Build 9 routes kanban cards to the profiles from Build 7. Skipping ahead works about as well as it does in the twelve parts, which is to say each build will quietly reference a foundation you have not laid.
+
+## Build 0: Day One
+
+![Build 0](../assets/art/part-02.webp)
+
+### What you are building
+
+A Hermes install that answers, a provider you chose on purpose, a backup you took before touching anything, and the short list of commands you will actually type every day.
+
+### What the docs say
+
+Checked against the Quickstart and the CLI command reference.
+
+| Fact | Detail |
+|---|---|
+| Install | One command on Linux and macOS. The installer page carries the Windows PowerShell command |
+| Setup modes | `hermes setup` offers Quick Setup (Nous Portal, OAuth, no keys to manage), Full Setup (every provider and option, bring your own keys), and Blank Slate (only provider, file operations and terminal; nothing else loads until you enable it) |
+| Provider choice | `hermes model` walks the choice interactively and can be rerun any time; there is no lock-in |
+| Where things go | Secrets and tokens in `~/.hermes/.env`. Non-secret settings in `~/.hermes/config.yaml`. `hermes config set` writes either one for you |
+| Two terminal UIs | `hermes --tui` is the modern one; the classic prompt UI is `hermes chat`. Both share sessions and slash commands |
+| Resume | `hermes --continue` resumes the most recent session |
+| Health | `hermes doctor` diagnoses config and dependencies (`--fix` repairs what it can). `hermes status` shows agent, auth and platform state |
+| Backup | `hermes backup` zips the whole home directory; `--quick --label <name>` takes a state-only snapshot |
+| Prompt cost | `hermes prompt-size` shows a byte breakdown of the system prompt: skills index, memory, profile, tool schemas. It runs offline |
+
+### Commands
+
+*`day-one.sh`*
+
+```bash
+# 1. Install (Linux and macOS)
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+
+# 2. Choose your setup mode and provider
+hermes setup            # Quick Setup, Full Setup, or Blank Slate
+hermes model            # pick or change the provider at any time
+
+# 3. Prove it answers
+hermes --tui
+
+# 4. Health, then a backup before you change anything
+hermes doctor
+hermes status
+hermes backup --quick --label "day-one"
+
+# 5. See what every prompt is already costing you
+hermes prompt-size
+```
+
+> 📝 **Which setup mode**
+>
+> Quick Setup is the fastest way to a working agent if you are happy to bill through Nous Portal. Full Setup is right if you already hold provider keys. Blank Slate is the choice for people who want to add every capability deliberately, and it is the safest starting point on a machine you care about, because nothing you did not choose ever loads, even after `hermes update`. Every build in this track works from any of the three; Blank Slate users re-enable toolsets with `hermes tools` as each build needs them.
+
+### Prompts
+
+The first prompt exists to test tools, not conversation. Part 2 makes the case: an agent that can chat but cannot act is a chatbot, and you find that out on day one or on the day it matters.
+
+*`prompt-00-prove-the-loop.md`*
+
+```markdown
+Before we build anything, prove your tool surface works. Do these in order
+and report each result on its own line, with the tool you used:
+
+1. Run a terminal command that prints the current directory, the OS, and
+   the shell.
+2. Read the file ~/.hermes/config.yaml and tell me the model and provider
+   currently set. Do not print any keys or tokens.
+3. Write a small file at ~/hermes-day-one.txt containing today's date and
+   the model name, then read it back to prove it landed.
+4. Fetch the page https://hermes-agent.nousresearch.com/docs/getting-started/quickstart
+   and tell me the three setup modes it lists.
+5. List the toolsets you currently have and name any that are gated off,
+   with the reason if you can tell.
+
+If any step fails, say which one and why. Do not work around a failure
+silently; a missing tool is exactly what I need to know today.
+```
+
+*`prompt-00-daily-commands.md`*
+
+```markdown
+Read the CLI command reference at
+https://hermes-agent.nousresearch.com/docs/reference/cli-commands
+and give me a two-column table of the twenty commands and slash commands a
+person running you every day would actually use, grouped as: start and
+resume, models and tools, memory and skills, sessions, and maintenance.
+One line per command, what it does in under twelve words, nothing else.
+```
+
+### The daily set
+
+You will get your own table from the prompt above. This is the one this masterclass would hand you.
+
+| Intent | Command |
+|---|---|
+| Start the modern UI | `hermes --tui` |
+| Resume the last session | `hermes --continue` |
+| Fresh thread, optional name | `/new` or `/new payments-refactor` |
+| Change model or provider | `hermes model` or `/model` |
+| See and tune tool access | `hermes tools` and `/tools` |
+| Switch a personality overlay | `/personality technical` |
+| Teach a skill from a source | `/learn <url, path, or description>` |
+| Browse and install skills | `hermes skills browse`, `hermes skills install <name>` |
+| Turn a bundled plugin on | `hermes plugins enable <name>` |
+| Health and state | `hermes doctor`, `hermes status` |
+| Read and change settings | `hermes config show`, `hermes config set <key> <value>` |
+| Prompt cost | `hermes prompt-size` |
+| Token and cost analytics | `hermes insights` |
+| Snapshot before changes | `hermes backup --quick --label <name>` |
+| Update, with a preview first | `hermes update --check`, then `hermes update --backup` |
+
+### Verify
+
+- [ ] hermes doctor reports no errors
+- [ ] The five-step tool prompt passed all five steps, or you know exactly which failed
+- [ ] A backup exists from before your first change
+- [ ] hermes prompt-size ran and you noted the total, so Build 2 and Build 4 have a baseline
+
+## Build 1: SOUL.md
+
+![Build 1](../assets/art/part-01.webp)
+
+### What you are building
+
+A SOUL.md that changes how the agent behaves, written as rules an observer could check, plus one or two personality overlays for the moods that do not belong in the default.
+
+### What the docs say
+
+Checked against the Personality and SOUL.md page.
+
+| Fact | Detail |
+|---|---|
+| Location | `~/.hermes/SOUL.md`, or `$HERMES_HOME/SOUL.md` when you run a custom home. Hermes loads it from there only, never from the directory you launched in, so a personality cannot change between projects by accident |
+| Position | Slot 1 of the system prompt, the agent identity position. The content goes in verbatim, no wrapper text, after a security scan and truncation |
+| Seeding | Hermes writes a starter SOUL.md if none exists and never overwrites one you have edited. An empty or unreadable file falls back to the built-in identity |
+| What belongs | Tone, directness, default interaction style, how to handle uncertainty and disagreement, what to avoid stylistically |
+| What does not | One-off project instructions, file paths, repo conventions, temporary workflow details. Those go in AGENTS.md (Build 3) |
+| Overlays | `/personality <name>` layers a session-level overlay on top; the built-ins include concise, technical, teacher, creative, and a few for fun. Custom ones live under `agent.personalities` in config.yaml. `/personality none` returns to plain SOUL.md |
+| Not the same as a system prompt | Personalities never touch `agent.system_prompt`, which is reserved for a manual system prompt |
+
+The starter file Hermes seeds is short and it is worth reading once, because it is the baseline every edit replaces. It tells the agent to match reply length to the weight of the ask, to skip filler and restating, to prefer plain claims over adjectives, to say when it is unsure, to agree because something is right rather than because you said it, and to give depth only when it is asked for or the stakes demand it. Keep what you like from that. The prompts below build on it rather than throwing it away.
+
+### Prompts
+
+The first prompt writes the file from evidence instead of from adjectives. It reads the doc page first so the split between SOUL.md and AGENTS.md is the agent's own, not a guess.
+
+*`prompt-01-write-soul.md`*
+
+```markdown
+We are going to write my SOUL.md properly. Do these in order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/user-guide/features/personality
+   and summarize in five lines what belongs in SOUL.md and what does not.
+2. Read the current ~/.hermes/SOUL.md and tell me what it already says.
+3. Interview me in three short rounds, one subject each. Start every round
+   by stating what you already believe from this conversation so I only
+   correct you:
+   - Voice: how direct, how long, what to never say.
+   - Judgment: what you decide alone, what you propose first, what always
+     stops for my explicit go.
+   - Uncertainty and disagreement: what you do when you are not sure, and
+     when you think I am wrong.
+   Ask for concrete examples, not adjectives: one reply of yours I liked,
+   one I did not, one decision you should have made alone.
+4. Draft the new SOUL.md. Every line must be a rule an observer could check
+   in a transcript. No project facts, no file paths, no tool names. Keep
+   it under forty lines.
+5. Show me a diff against the current file. Do not save until I say go.
+6. After I say go, save it, then tell me what I have to do for it to take
+   effect (a new session) and run hermes prompt-size so I can see its cost.
+```
+
+*`prompt-01-test-soul.md`*
+
+```markdown
+Start of a new session. Without reading SOUL.md again, do the following
+task and let me watch which rules you follow:
+
+Push the current branch of this repository to its remote.
+
+I have not said go. If your SOUL.md is working you will stop before the
+push and ask. If you push, the rule is decoration and we rewrite it as a
+plain prohibition.
+```
+
+### Three complete files
+
+Pick the one closest to how you work, paste it over `~/.hermes/SOUL.md`, and let the interview prompt refine it. All three keep the starter file's spine and add the rules that decide what the agent does at two in the morning on a cron schedule, which is the only time identity files are really tested.
+
+*`~/.hermes/SOUL.md`*
+
+```markdown
+# Identity
+
+You are my working agent. You run tasks end to end and report what
+actually happened, not what was attempted.
+
+# Voice
+
+- Match the length of the reply to the weight of the ask. A one-line
+  question gets a one-line answer. Finished work gets a short report:
+  what changed, what is verified, what is left.
+- No filler, no restating my request, no narrating tool calls I can see.
+- Plain claims over adjectives. When unsure, say so in the same sentence.
+- Agree because it is right, not because I said it. If I am wrong, say
+  so once, plainly, then do what I asked unless it is irreversible.
+
+# Judgment
+
+- Lead with the answer, then the reasoning.
+- Recommend one option and the reason. If it is genuinely close, say so
+  in a sentence and still pick one.
+- Ask a question only when the answer changes what you would do.
+  Otherwise state your assumption and continue.
+- If a claim can be checked with a tool, check it before stating it.
+
+# What you never do
+
+- Never send, publish, delete, push, or spend money without my explicit
+  go in the conversation where it happens.
+- Never present a guess as a finding.
+- Never silently drop part of a task. If you skipped something, say so.
+```
+
+*`~/.hermes/SOUL.md`*
+
+```markdown
+# Identity
+
+You operate on my behalf inside clear boundaries. The job is not to answer
+my questions; it is to move my work forward so I am not the bottleneck.
+
+# Voice
+
+- Brief by default. Detail when I ask, when you are teaching me something,
+  or when the stakes demand it.
+- No filler and no praise. Say what you found and what you did.
+- When unsure, say so and name what would settle it.
+
+# How you operate
+
+- When you see the next obvious step and it is reversible, take it, then
+  tell me in one line.
+- When a step is outward-facing or irreversible, prepare everything, show
+  me exactly what would happen, and stop for my go.
+- Keep a running list of what is waiting on me. Surface it when I return,
+  shortest first.
+- Disagree when you should. A twin that only agrees is useless to me.
+
+# What you never do
+
+- Never message anyone else as me without my go on that specific message.
+- Never delete data, change money, or change a public surface on your own.
+- Never hide a failure inside a summary. A half-finished task is reported
+  as half finished.
+```
+
+*`~/.hermes/SOUL.md`*
+
+```markdown
+# Identity
+
+You are my working agent and my teacher. Every substantial task has two
+outputs: the result, and the seam that shows how you got it, so I can do a
+smaller version myself next time.
+
+# Voice
+
+- Direct and warm. Honest before agreeable.
+- Explain the technique you used in two or three sentences, not a lecture.
+- When I make a language or reasoning error, correct it in one clause and
+  move on. I asked for this.
+
+# How you teach
+
+- Name the tool or mechanism you used and why you chose it over the
+  alternatives.
+- When I ask you to just do it, do it, then add one line on how.
+- Ask me to predict the outcome before you run something non-trivial when
+  there is time; it costs a sentence and it is how I learn.
+
+# What you never do
+
+- Never flatter. Never soften a wrong answer of mine into a maybe.
+- Never take an irreversible action without my explicit go.
+- Never assume I understood. If the concept was new, check with one
+  question.
+```
+
+### Overlays for the moods
+
+The default file should be the one you want ninety percent of the time. The other ten percent is what overlays are for, and they cost nothing when they are off.
+
+*`~/.hermes/config.yaml`*
+
+```yaml
+agent:
+  personalities:
+    reviewer: >
+      You are a meticulous code reviewer. Identify bugs, security issues,
+      performance concerns and unclear design choices. Be precise and
+      constructive. Do not rewrite code unless asked.
+    planner: >
+      You are in planning mode. Produce options with trade-offs and a
+      recommendation. Do not run tools that change anything.
+```
+
+*`overlays.sh`*
+
+```bash
+/personality reviewer     # in any chat, CLI or gateway
+/personality teacher      # a built-in
+/personality none         # back to plain SOUL.md
+```
+
+### Verify
+
+- [ ] hermes prompt-size shows the SOUL.md bytes you expect
+- [ ] In a fresh session, the push test stopped and asked for a go
+- [ ] /personality with no argument lists your custom overlays next to the built-ins
+- [ ] The file contains no project facts, no paths, and no tool names
+
+## Build 2: USER.md and MEMORY.md
+
+![Build 2](../assets/art/part-03.webp)
+
+### What you are building
+
+The two built-in memory files, seeded on purpose instead of accumulating by accident: USER.md from a short interview, MEMORY.md from an inspection of the machine the agent actually runs on. Plus the habit that makes memory pay off, and the cheap-model setting that makes the background review affordable.
+
+### What the docs say
+
+Checked against the Memory page and the Import from Other Agents page.
+
+| Fact | Detail |
+|---|---|
+| Where | Both files live in `~/.hermes/memories/`. MEMORY.md is the agent's notes about the environment and lessons. USER.md is your profile: preferences, communication style, expectations |
+| Limits | MEMORY.md 2,200 characters, about 800 tokens. USER.md 1,375 characters, about 500 tokens. Exceeding a limit returns an error that shows the current entries so the agent can consolidate; nothing is silently dropped |
+| Frozen snapshot | Both are rendered into the system prompt once, at session start, and never change mid-session. That preserves the prompt cache. Writes go to disk immediately and show up in the next session |
+| The tool | The `memory` tool adds, replaces and removes entries. `replace` and `remove` match a short unique substring of the entry, not the whole text; an ambiguous substring is refused |
+| The boundary | Memory is built around the moment a session ends. Run `/new` at natural boundaries: a finished task, a topic change, the start of a day. Each boundary re-reads the updated files |
+| Recall | `session_search` searches every past conversation over full-text search in `~/.hermes/state.db`. It costs nothing until it is called, so the split is: memory for what should always be in context, session search for everything else |
+| Config | `memory.memory_enabled`, `memory.user_profile_enabled`, `memory.memory_char_limit`, `memory.user_char_limit`, `memory.write_approval` (default false, writes freely) |
+| Review cost | The background review that proposes memory and skill writes runs on the main model by default. `auxiliary.background_review.provider` and `.model` point it at a cheaper model; capture quality held in the project's own testing |
+| Import | `hermes import-agent claude-code` or `hermes import-agent codex` maps global instruction files into MEMORY.md entries, permission rules into the command allowlist and `approvals.deny`, MCP servers into `mcp_servers`, and skills into their own category. Credentials are never read. `--dry-run` previews, `--sync` re-imports what changed |
+
+### Prompts
+
+*`prompt-02-seed-user.md`*
+
+```markdown
+We are going to seed USER.md, the file you keep about me. Do these in order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
+   and tell me in three lines what USER.md is for, its character limit,
+   and how the memory tool's replace action matches an entry.
+2. Show me what ~/.hermes/memories/USER.md contains right now.
+3. Interview me in short rounds, one subject each, and start each round
+   with what you already believe so I only correct you:
+   - How to talk to me: length, tone, what annoys me.
+   - Standing preferences: languages, package managers, spelling,
+     formatting, anything I would otherwise repeat.
+   - Things you must never ask me twice.
+   - My environment in one line: time zone, working hours, main machine.
+4. Write the entries with the memory tool, target "user", one fact per
+   entry, shortest phrasing that still stands alone. Stay well under the
+   1,375 character limit; leave room for what you learn on your own.
+5. Show me the finished file. Tell me which things I said you deliberately
+   left out because they belong in a project's AGENTS.md instead.
+```
+
+*`prompt-02-seed-memory.md`*
+
+```markdown
+Seed MEMORY.md, your own notes, from the machine you are running on rather
+than from guesses. Do these in order.
+
+1. Inspect the environment with the terminal: OS and version, shell,
+   package managers present, language runtimes and versions, container
+   tools, the folders under my home where projects live, and any CLI
+   tools you can see that you will use often.
+2. Read ~/.hermes/config.yaml and note the model, the provider, and which
+   toolsets are enabled. Do not record any secret.
+3. Write eight to twelve entries with the memory tool, target "memory".
+   Each entry is a fact you would otherwise have to rediscover: a version,
+   a path, a quirk, a convention. No opinions, no project details.
+4. Show me the file and its usage count against the 2,200 character
+   limit. Leave at least a third of the budget free.
+```
+
+*`prompt-02-consolidate.md`*
+
+```markdown
+Your memory is near its limit. Read every entry in MEMORY.md and USER.md,
+then propose a consolidation: merge overlapping entries, drop anything a
+session_search could recover in one query, and shorten what remains.
+Show me the before and after side by side with the character counts.
+Do not write anything until I say go.
+```
+
+*`prompt-02-import.md`*
+
+```markdown
+I used another coding agent before Hermes. Read
+https://hermes-agent.nousresearch.com/docs/user-guide/import-from-other-agents
+then run hermes import-agent --dry-run and walk me through the plan it
+prints: what would land in MEMORY.md, what becomes an allowlist or deny
+rule, which skills would be copied and where, and what was reported as
+unmapped. Do not apply it. I will decide item by item and then say go.
+```
+
+### The cheap review
+
+*`~/.hermes/config.yaml`*
+
+```yaml
+auxiliary:
+  background_review:
+    provider: openrouter                 # any configured provider
+    model: your-inexpensive-model        # a fast model is enough for the review
+```
+
+*`prompt-02-cheap-review.md`*
+
+```markdown
+Read the "background review" section of
+https://hermes-agent.nousresearch.com/docs/user-guide/features/memory
+Then set auxiliary.background_review.provider and
+auxiliary.background_review.model in my config.yaml to the cheapest model
+I have configured that you would trust to summarize a conversation. Show
+me the diff before you save it. After I say go, run hermes config show
+and confirm the keys took.
+```
+
+### Verify
+
+- [ ] Both files exist under ~/.hermes/memories/ and each is under its limit with headroom
+- [ ] After /new, the agent answers "what do you know about me" from USER.md without being told
+- [ ] hermes prompt-size shows memory bytes close to the file sizes
+- [ ] The background review runs on the model you chose (hermes config show)
+
+## Build 3: Project Context
+
+![Build 3](../assets/art/part-05.webp)
+
+### What you are building
+
+One AGENTS.md at the root of each repository you work in, so the agent stops re-learning your project every session, plus a personal override file for the instructions that should not be committed.
+
+### What the docs say
+
+Checked against the Context Files page.
+
+| Fact | Detail |
+|---|---|
+| Priority | One project context type loads per session, first match wins: `.hermes.md`, then `AGENTS.override.md`, then `AGENTS.md`, then `CLAUDE.md`, then `.cursorrules`. SOUL.md always loads separately as the identity |
+| The override | If `AGENTS.override.md` sits next to `AGENTS.md`, the override loads instead of the committed file. Keep it gitignored for personal instructions |
+| The chain | Inside a git repository, Hermes merges the git-root AGENTS.md with every AGENTS.md between the root and your working directory, in order |
+| Progressive discovery | As the agent reads or runs things in subdirectories, it loads any AGENTS.md it finds there, once per directory, walking up to five parents. Nothing bloats the prompt until it is needed |
+| Scanning | Context files are scanned for prompt-injection patterns before they load. A file that trips a pattern is blocked, which is the right outcome for a cloned repo you have not read |
+| Cron | Cron jobs load no context file at all unless the job carries a `--workdir`. Build 8 covers this |
+
+### Prompts
+
+*`prompt-03-write-agents-md.md`*
+
+```markdown
+We are going to give this repository an AGENTS.md. Do these in order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files
+   and tell me in four lines which file wins when several exist, how the
+   directory chain works, and what a personal AGENTS.override.md is for.
+2. Explore this repository: the README, the package or build manifest,
+   the test command, the folder layout, and any existing context files.
+   Do not read secrets or .env files.
+3. Draft AGENTS.md at the git root with exactly these sections:
+   - What this project is, in three sentences.
+   - How to run it, test it, and build it. Real commands, verified by
+     running the read-only ones.
+   - Conventions: language, formatter, naming, branch and commit rules.
+   - Where things live: the five or six folders that matter and what is
+     in each.
+   - What never to do in this repo.
+   Keep it under 120 lines. Facts only, no praise for the codebase.
+4. If any subfolder works differently enough to need its own file,
+   propose a nested AGENTS.md for it and say why.
+5. Show me the file before writing it. After I say go, write it, then
+   start a fresh session in this directory and tell me what you know
+   about the project and where that knowledge came from.
+```
+
+*`prompt-03-override.md`*
+
+```markdown
+Create AGENTS.override.md next to the committed AGENTS.md in this
+repository, containing only my personal instructions for working here:
+my scratch folder, the branch prefix I use, and that I want a diff before
+any file write in src/. Add it to .gitignore. Confirm from the Context
+Files doc that the override replaces the committed file rather than
+adding to it, and warn me if anything in AGENTS.md would therefore stop
+applying to me.
+```
+
+### A template to start from
+
+*`AGENTS.md`*
+
+```markdown
+# Project
+
+One paragraph: what this is, who uses it, what "working" means.
+
+# Run, test, build
+
+- Run: `<command>`
+- Test: `<command>` (must pass before any commit)
+- Build: `<command>`
+
+# Conventions
+
+- Language and version, formatter, lint command.
+- Naming rules that a reader would not guess.
+- Branch prefix and commit message shape.
+
+# Where things live
+
+- `src/`: ...
+- `tests/`: ...
+- `scripts/`: ...
+
+# Never
+
+- Never edit generated files under `<path>`.
+- Never run the migration command against anything but the local database.
+- Never commit `.env` or anything under `secrets/`.
+```
+
+### Verify
+
+- [ ] A fresh session in the repo names AGENTS.md as where it learned the project
+- [ ] The override file is gitignored and the agent confirms it replaces the committed file
+- [ ] hermes prompt-size in that directory shows the context file bytes
+
+## Build 4: Skills
+
+![Build 4](../assets/art/part-04.webp)
+
+### What you are building
+
+Your first skills, written from work you already did once; a bundle for the combination you run every week; and a curator configured so the library stays clean without you.
+
+### What the docs say
+
+Checked against the Skills page, the Creating Skills guide, the Curator page, and the Skills Hub reference.
+
+| Fact | Detail |
+|---|---|
+| Where | `~/.hermes/skills/<category>/<name>/SKILL.md`. Agent-created skills land there too unless `skills.create_dir` points elsewhere. `skills.external_dirs` adds shared directories. Project skills beat local skills beat external ones when names collide |
+| Frontmatter | `name`, `description`, `version`, optional `platforms`, and a `metadata.hermes` block with `tags`, `category`, `requires_toolsets`, `fallback_for_toolsets`, and `config` entries the skill needs |
+| Loading | Progressive disclosure: the index of names and descriptions loads at session start, a body loads only on a match. The description is therefore the whole trigger |
+| Teaching | `/learn <url>`, `/learn <path to a repo, a PDF, a document>`, or `/learn <a description of what we just did>` creates a skill from that source |
+| The tool | The agent writes and edits its own skills with `skill_manage`. `skills.write_approval: true` makes every such write ask you first |
+| Bundles | `~/.hermes/skill-bundles/<slug>.yaml` with `name`, `description`, a required `skills` list, and an optional `instruction` prepended to all of them. `hermes bundles create <slug> --skill a --skill b -d "..."` writes one. `/<slug> <task>` loads every skill in it |
+| The hub | `hermes skills browse`, `search`, `inspect`, `install`, and `tap add <org/repo>` for a private skill repository. Installs pass a security scan; inspect before you install anyway |
+| The curator | A background pass over agent-created skills. Prune-only by default: idle skills go stale after 14 days and archive after 30. `curator.consolidate: true` opts into the LLM merge pass. `hermes curator pin <skill>` exempts one; snapshots are taken before every real pass and `hermes curator rollback` restores |
+
+### Prompts
+
+*`learn.sh`*
+
+```bash
+# Teach from a source. Each of these is a documented /learn form.
+/learn https://docs.example.com/api/quickstart
+/learn the REST client in ~/projects/acme-sdk, focus on auth and pagination
+/learn how I just deployed the staging server
+/learn ~/books/some-reference.pdf
+```
+
+*`prompt-04-skill-from-work.md`*
+
+```markdown
+We just finished a workflow I will need again. Turn it into a skill. Do
+these in order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills
+   and confirm the frontmatter fields and the sections a skill should have.
+2. Reconstruct what we actually did from this conversation: every tool
+   call that mattered, every correction I made, every dead end.
+3. Draft SKILL.md for ~/.hermes/skills/<category>/<name>/ with:
+   - A description under sixty characters, phrased as the request it
+     answers, using the verbs I would actually say.
+   - When to Use, and when not to.
+   - Procedure, numbered, with the exact commands.
+   - Pitfalls, including every correction I made today.
+   - Verification: what proves it worked, stated so you can check it
+     without me.
+   - metadata.hermes tags and category, and requires_toolsets if the
+     procedure needs the terminal, browser, or web.
+4. Show me the file. After I say go, create it with skill_manage.
+5. Then start a new session and trigger it with a natural request that
+   matches the description, without naming the skill. Tell me whether it
+   loaded. If it did not, the description is a summary, not a trigger;
+   rewrite it and try again.
+```
+
+*`prompt-04-audit-library.md`*
+
+```markdown
+Audit my skill library. Run hermes curator status and read the index of
+skills you have available. For each agent-created skill give me: name,
+description, when it last loaded, and one of keep, merge, or archive with
+a reason. Propose the merges as concrete new descriptions. Then tell me
+which skills you would pin so the curator never touches them. Do not
+change anything; this is a report.
+```
+
+### A complete skill file
+
+*`~/.hermes/skills/ops/release-check/SKILL.md`*
+
+```markdown
+---
+name: release-check
+description: Check a release is live, healthy, and serving the right version
+version: 1.0.0
+platforms: [macos, linux]
+metadata:
+  hermes:
+    tags: [release, verification, ops]
+    category: ops
+    requires_toolsets: [terminal, web]
+---
+
+## When to Use
+When I ask whether a release, deploy, or rollout is live, healthy, or
+serving the right version. Not for deploying; that is a different skill.
+
+## Procedure
+1. Ask which environment if I did not say. Never assume production.
+2. Fetch the health endpoint with a cache-busting query string and record
+   the status code.
+3. Fetch the version endpoint and compare it to the version I named.
+4. Tail the error log for the last sixty seconds and count new entries.
+5. Report all three results on three lines, then a one-word verdict.
+
+## Pitfalls
+- The deploy API returns 202 before the release is live. A 202 is not live.
+- A CDN can serve a healthy cached page while the origin is down. The
+  cache-busting parameter in step 2 is not optional.
+- Two of three checks passing is a failed check. Say so.
+
+## Verification
+- Health returned 200 with the cache-busting parameter.
+- The served version string matches the version I named.
+- Zero new error-log entries in the window.
+```
+
+### A bundle for the weekly combination
+
+*`bundle.sh`*
+
+```bash
+hermes bundles create ship-it \
+  --skill github-code-review \
+  --skill test-driven-development \
+  --skill release-check \
+  -d "Review, test, and verify a release end to end"
+
+/ship-it verify the 2.4.1 release on staging
+```
+
+*`~/.hermes/skill-bundles/ship-it.yaml`*
+
+```yaml
+name: ship-it
+description: Review, test, and verify a release end to end
+skills:
+  - github-code-review
+  - test-driven-development
+  - release-check
+instruction: |
+  Run the review first. Do not start the release check until the tests
+  pass. Report each skill's verdict on its own line.
+```
+
+### The curator, configured
+
+*`~/.hermes/config.yaml`*
+
+```yaml
+curator:
+  enabled: true
+  interval_hours: 168          # weekly
+  stale_after_days: 14
+  archive_after_days: 30
+  consolidate: false           # prune only; opt in to the LLM merge pass later
+  prune_builtins: true
+```
+
+*`curator.sh`*
+
+```bash
+hermes curator status              # last run, counts, pinned list
+hermes curator run --dry-run       # what it would do, no mutations
+hermes curator pin release-check   # never auto-transition this one
+hermes curator rollback --list     # every snapshot, with reason and size
+```
+
+### Verify
+
+- [ ] A natural request that matches the description loads the skill in a fresh session
+- [ ] /ship-it <task> loads all three skills (the agent names them in its first reply)
+- [ ] hermes curator status lists the skill you pinned
+- [ ] hermes prompt-size shows the skills index grew by roughly one line per skill, not by the bodies
+
+## Build 5: Plugins
+
+![Build 5](../assets/art/part-11.webp)
+
+### What you are building
+
+The bundled plugins that should be on from day one, switched on. The judgment for when a plugin is the answer and when a skill or `execute_code` is. And, if you need one, a minimal plugin that registers a single tool, written against the documented shape.
+
+### What the docs say
+
+Checked against the Plugins page and the Built-in Plugins page.
+
+| Fact | Detail |
+|---|---|
+| Four kinds | Tool plugins that register tools and hooks, memory providers, model providers, and dashboard plugins that add a tab |
+| Opt-in | Bundled and third-party plugins ship disabled. `hermes plugins enable <name>` turns one on; `plugins.enabled` is the allow-list in config.yaml and `plugins.disabled` always wins if a name is in both. `hermes plugins list` shows all three states |
+| Where user plugins live | `~/.hermes/plugins/<name>/` with a `plugin.yaml` (name, version, description) and an `__init__.py` whose `register(ctx)` calls `ctx.register_tool(...)` and `ctx.register_hook(...)` |
+| Bundled, worth enabling early | `security-guidance` pattern-matches dangerous code on file writes and appends a warning or blocks. `disk-cleanup` tracks test and temp files the agent creates and cleans them on session end |
+| Also bundled | `observability/langfuse` tracing, `spotify`, `google_meet`, `teams_pipeline`, image backends under `image_gen/`, `hermes-achievements`, and `kanban/dashboard` which Build 9 uses |
+| Restart | A new or newly enabled plugin loads on the next start of Hermes |
+
+### Prompts
+
+*`prompt-05-enable-bundled.md`*
+
+```markdown
+Read https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins
+then run hermes plugins list and tell me, for every bundled plugin, its
+name, one line on what it does, and whether it is enabled.
+
+Then enable security-guidance and disk-cleanup. Show me the diff to
+config.yaml before you save it. After I say go, apply it, tell me I need
+to restart, and after the restart prove both loaded by showing hermes
+plugins list again.
+```
+
+*`prompt-05-skill-or-plugin.md`*
+
+```markdown
+I want the agent to be able to <capability>. Before building anything,
+decide the extension point and show your reasoning against these three
+questions, each answered yes or no with one line of evidence:
+
+1. Does a built-in tool or an installed MCP server already do this? Check
+   /tools and the mcp_servers section of my config.yaml.
+2. Could execute_code do it as a script the agent writes and runs, with
+   no code for me to maintain?
+3. Does the model need to call this as a TOOL mid-reasoning, rather than
+   follow it as a procedure?
+
+If 1 is yes, use that. If 2 is yes and 3 is no, write a skill (Build 4).
+Only if 3 is yes and 1 and 2 are no do we write a plugin. Tell me which
+and why, then stop.
+```
+
+*`prompt-05-minimal-plugin.md`*
+
+```markdown
+We decided a plugin is right. Read the "Minimal working example" section of
+https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
+and follow its shape exactly.
+
+Create ~/.hermes/plugins/<name>/ with plugin.yaml and __init__.py. The
+plugin registers ONE tool named <tool_name> with a JSON schema that has
+<parameters>, and a handler that <does the one thing>. No network calls,
+no writes outside the agent's home, no secrets read from anywhere.
+
+Show me both files before writing them. After I say go: write them, add
+the plugin to plugins.enabled with a diff, tell me to restart, and after
+the restart call the tool once with a real argument and show the result
+and the /tools entry.
+```
+
+### The two files
+
+*`~/.hermes/plugins/hello-world/plugin.yaml`*
+
+```yaml
+name: hello-world
+version: "1.0"
+description: A minimal example plugin
+```
+
+*`~/.hermes/plugins/hello-world/__init__.py`*
+
+```python
+"""Minimal Hermes plugin: registers one tool."""
+
+def register(ctx):
+    schema = {
+        "name": "hello_world",
+        "description": "Returns a friendly greeting for the given name.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string", "description": "Name to greet"}
+            },
+            "required": ["name"],
+        },
+    }
+
+    def handler(args, **kwargs):
+        return {"greeting": f"Hello, {args.get('name', 'world')}"}
+
+    ctx.register_tool(schema=schema, handler=handler)
+```
+
+> ⚠️ **The docs example is the contract**
+>
+> The register call signature, the hook names and the way a handler returns its result are the parts that change between releases. The prompt above makes the agent read the current example before writing, and the minimal shape here is the one documented at the time of writing. If your version differs, the doc page wins.
+
+### Verify
+
+- [ ] hermes plugins list shows security-guidance and disk-cleanup enabled
+- [ ] Writing a file with an obviously dangerous line gets the security warning appended
+- [ ] If you wrote a plugin, /tools lists its tool and a real call returns the expected shape
+
+## Build 6: The Memory Stack
+
+![The four layers of memory](../assets/art/d25.webp)
+
+### What you are building
+
+A memory that actually works across weeks, built in four layers that each do one job. The two you already have from Build 2. One external provider chosen on purpose from the three that matter most to a personal setup: Honcho, Mem0, or Hindsight. An Obsidian vault for the structured notes you want to read yourself. And a nightly job that turns yesterday's conversations into tomorrow's context.
+
+### What the docs say
+
+Checked against the Memory Providers page, the Honcho page, and the bundled Obsidian skill in the Hermes repository.
+
+| Layer | What it holds | Always on? | Costs |
+|---|---|---|---|
+| 1. MEMORY.md and USER.md | The few facts that must be in every prompt | Yes | Tokens in every prompt, capped |
+| 2. session_search | Every past conversation, full-text, in state.db | Yes | Nothing until queried |
+| 3. One external provider | Facts, a user model, or a knowledge graph that outlives any session | One at a time, your choice | Provider pricing, or free when self-hosted or local |
+| 4. Obsidian vault | Structured notes with links, curated by you in the app | A bundled skill, not a provider | Nothing |
+
+| Fact | Detail |
+|---|---|
+| One provider | Eight ship as plugins. Only one is active at a time, and the built-in files stay on alongside it |
+| Picking | `hermes memory setup` is the interactive picker. `hermes memory status` shows what is active. `hermes memory off` disables the external one. Or set `memory.provider` in config.yaml by hand |
+| Honcho | Dialectic user modeling: after each turn it reasons about your preferences, habits and goals, and injects a session-scoped context. Config in `$HERMES_HOME/honcho.json`, key in `HONCHO_API_KEY`. Tools: `honcho_profile`, `honcho_search`, `honcho_context`, `honcho_reasoning`, `honcho_conclude` |
+| Mem0 | Server-side fact extraction. Three modes: Platform (API key), Self-hosted server, and Open Source with your own LLM and vector store. Config in `$HERMES_HOME/mem0.json`, secret in `MEM0_API_KEY`. Tools: `mem0_search`, `mem0_add`, `mem0_update`, `mem0_delete` |
+| Hindsight | Knowledge graph with entity resolution and a `hindsight_reflect` tool that synthesizes across memories. Cloud with an API key, or local on embedded PostgreSQL for free. Config in `$HERMES_HOME/hindsight/config.json`, key in `HINDSIGHT_API_KEY`. Tools: `hindsight_retain`, `hindsight_recall`, `hindsight_reflect` |
+| Obsidian | The bundled skill at `skills/note-taking/obsidian` reads, lists, searches, creates and appends notes with the ordinary file tools. It resolves the vault from `OBSIDIAN_VAULT_PATH` in `~/.hermes/.env`, falling back to `~/Documents/Obsidian Vault`. No app needed to write; the app is how you read |
+
+### Which provider
+
+| You want | Pick | Because |
+|---|---|---|
+| The agent to know who you are, across every session and every gateway chat, without you writing it down | Honcho | It models the user, not just facts, and its context injection is session-aware |
+| A plain durable fact store you can self-host today for nothing, and grow into a paid platform later | Mem0 | Three modes on one config file, and the OSS mode runs on your own LLM and vector store |
+| Recall that follows relationships between things, and a tool that reasons across memories | Hindsight | The graph and the reflect tool are unique among the three, and local mode is free |
+
+### Honcho
+
+*`honcho.sh`*
+
+```bash
+hermes memory setup                 # pick "honcho"; the wizard asks for the key
+# or by hand:
+hermes config set memory.provider honcho
+echo 'HONCHO_API_KEY=your-key' >> ~/.hermes/.env
+hermes memory status
+```
+
+*`~/.hermes/honcho.json`*
+
+```json
+{
+  "recallMode": "hybrid",
+  "contextCadence": 1,
+  "dialecticCadence": 3,
+  "dialecticDepth": 1,
+  "sessionStrategy": "per-directory",
+  "observationMode": "directional"
+}
+```
+
+| Knob | Default | What it does |
+|---|---|---|
+| recallMode | hybrid | hybrid injects context automatically and exposes the tools; context injects only; tools leaves the model to call honcho_reasoning itself |
+| contextCadence | 1 | Turns between refreshes of the base layer: session summary, your representation, the peer cards |
+| dialecticCadence | 2 | Turns between the LLM reasoning passes about you. Recommended 1 to 5; raise it to spend less |
+| dialecticDepth | 1 | Passes per reasoning invocation, 1 to 3 |
+| sessionStrategy | per-directory | per-directory, per-repo, per-session, or global |
+| observationMode | directional | directional keeps every observation; unified pools them |
+
+*`prompt-06-honcho.md`*
+
+```markdown
+Set up Honcho as my memory provider. Do these in order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho
+   and tell me in five lines what the two context layers are and what
+   contextCadence, dialecticCadence and recallMode control.
+2. Run hermes memory status and tell me what is active now.
+3. Propose the honcho.json for my profile with recallMode hybrid,
+   dialecticCadence 3, dialecticDepth 1, and sessionStrategy
+   per-directory. Explain each value in one line and show me the file.
+   Do not write it, and do not touch .env; I will add the key myself.
+4. After I say go and confirm the key is in .env, run hermes memory
+   setup non-interactively if it supports it, or set memory.provider
+   honcho with hermes config set, then run hermes memory status and show
+   me the honcho tools in /tools.
+5. Ask me two questions about how I work, then call honcho_profile and
+   show me what Honcho now believes about me.
+```
+
+### Mem0
+
+*`mem0.sh`*
+
+```bash
+hermes memory setup                 # pick "mem0", then Platform, Self-hosted server, or Open Source
+# Platform, by hand:
+hermes config set memory.provider mem0
+echo 'MEM0_API_KEY=your-key' >> ~/.hermes/.env
+# Open Source, no Mem0 account, your own LLM and vector store:
+hermes memory setup mem0 --mode oss --oss-llm openai --oss-llm-key sk-... --oss-vector qdrant
+# Self-hosted server:
+hermes memory setup mem0 --mode selfhosted --host http://localhost:8888 --api-key your-admin-key
+hermes memory status
+```
+
+*`prompt-06-mem0.md`*
+
+```markdown
+Set up Mem0 as my memory provider in <platform | self-hosted | oss> mode.
+Do these in order.
+
+1. Read the Mem0 section of
+   https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
+   and tell me the exact setup command for the mode I named and which
+   file holds its settings.
+2. Run hermes memory status and tell me what is active now.
+3. Show me the command you will run and the mem0.json you expect it to
+   write. For oss mode, tell me which LLM and vector store you will use
+   and confirm both are reachable before anything is written. Only the
+   secret goes in .env; I will add it myself.
+4. After I say go, run it, then run hermes memory status and show me the
+   four mem0 tools in /tools.
+5. Store one fact about me with mem0_add, start a new session with /new,
+   and recall it with mem0_search to prove the loop works.
+```
+
+### Hindsight
+
+*`hindsight.sh`*
+
+```bash
+hermes memory setup                 # pick "hindsight", then cloud or local
+# cloud, by hand:
+hermes config set memory.provider hindsight
+echo 'HINDSIGHT_API_KEY=your-key' >> ~/.hermes/.env
+# local mode has a UI:
+hindsight-embed -p hermes ui start
+hermes memory status
+```
+
+*`~/.hermes/hindsight/config.json`*
+
+```json
+{
+  "mode": "local",
+  "bank_id": "hermes",
+  "memory_mode": "hybrid",
+  "recall_budget": "mid",
+  "auto_retain": true,
+  "auto_recall": true
+}
+```
+
+*`prompt-06-hindsight.md`*
+
+```markdown
+Set up Hindsight as my memory provider in <cloud | local> mode. Do these
+in order.
+
+1. Read the Hindsight section of
+   https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
+   and tell me what retain, recall and reflect each do, and what
+   memory_mode and recall_budget control.
+2. Run hermes memory status and tell me what is active now.
+3. Show me the hindsight/config.json you propose: mode as I named,
+   memory_mode hybrid, recall_budget mid, auto_retain and auto_recall on.
+   Do not write it. For cloud mode, I add the key to .env myself.
+4. After I say go, run hermes memory setup or set memory.provider
+   hindsight, confirm the client installed, then show me the three
+   hindsight tools in /tools.
+5. Tell me three related facts, then in a fresh session call
+   hindsight_reflect with a question that needs all three, and show me
+   the answer and which memories it drew on.
+```
+
+### Obsidian
+
+*`obsidian.sh`*
+
+```bash
+echo 'OBSIDIAN_VAULT_PATH=/absolute/path/to/your/vault' >> ~/.hermes/.env
+# Open that folder as a vault in the Obsidian app to read what the agent writes.
+```
+
+*`prompt-06-obsidian.md`*
+
+```markdown
+Using the obsidian skill, resolve my vault path from OBSIDIAN_VAULT_PATH
+and confirm the folder exists. Then create a folder called Agent inside
+the vault and write one note per topic we have covered today, each with
+a one-line summary at the top, the decisions as a bullet list, and
+wikilinks between notes that reference each other. Finish with an index
+note that links every note you wrote. Show me the file list when done.
+```
+
+> ℹ️ **What goes where**
+>
+> Layer 1 is for what must be in every prompt. Layer 2 is for "what did we say about X three weeks ago". Layer 3 is for what the agent should know about you or your world without either of you writing it down. Layer 4 is for what you want to read, curate and link yourself. When a fact is sitting in the wrong layer, that is usually why memory feels like it does not work.
+
+### The nightly consolidation
+
+This job is a community pattern, described publicly by an operator running dozens of cron jobs, and it is built entirely from the primitives documented above: a cron job in a fresh session, `session_search` over yesterday, the `memory` tool for the two files, and the Obsidian skill for the daily note. Build 8 explains the cron flags; this is the job.
+
+*`nightly-consolidation.sh`*
+
+```bash
+hermes cron create "every 1d at 03:00" \
+  "You are running unattended with no chat history. Use session_search to read every session from the last 24 hours. Extract: decisions made, projects touched, bugs chased and their fixes, people mentioned, and mistakes that must not repeat. Then: (1) update MEMORY.md with the memory tool, target memory, adding only durable facts and merging or replacing entries so it stays under its limit; (2) update USER.md, target user, only if you learned a new stable preference; (3) using the obsidian skill, write a note at Agent/Daily/<today>.md in the vault with those five sections and wikilinks to any project notes that exist. Reply with a five-line summary of what changed, or with only [SILENT] if nothing durable happened." \
+  --skill obsidian \
+  --name "nightly-consolidation"
+```
+
+### Verify
+
+- [ ] hermes memory status names the provider you chose and nothing else
+- [ ] /tools lists that provider's tools (honcho_*, mem0_*, or hindsight_*)
+- [ ] A fact stored in one session is recalled in a fresh one after /new
+- [ ] The Obsidian folder shows the notes, with links that resolve in the app
+- [ ] hermes cron list shows nightly-consolidation, and hermes cron run <id> produces a summary or [SILENT]
+
+## Build 7: Profiles
+
+![The fleet: a frontier planner and inexpensive workers](../assets/art/d27.webp)
+
+### What you are building
+
+A roster of profiles, each a whole independent agent with its own identity, memory, skills and model, arranged so the expensive model plans and the inexpensive models do the work.
+
+### What the docs say
+
+Checked against the Profiles page and the cost-strategy section of the Kanban page.
+
+| Fact | Detail |
+|---|---|
+| What a profile is | A separate Hermes home directory: its own config.yaml, .env, SOUL.md, memories, sessions, skills, cron jobs and state database. Creating one also creates a command alias, so `hermes profile create coder` gives you a `coder` command, the same as `hermes -p coder` |
+| Descriptions | `--description "<role>"` at create time, or `hermes profile describe <name> --text "..."` later. The kanban decomposer routes work by these descriptions, so write them as what the profile is good at |
+| Cloning | `--clone` copies config, .env, SOUL.md, skills and the two memory files from the current profile. `--clone-from <source>` picks a different source. `--clone-all` copies everything including plugins and all memories, but not session history |
+| The OAuth trap | Anthropic, OpenAI Codex and xAI OAuth logins use single-use refresh tokens. A copied login is the same credential with two owners and the first refresh breaks the other. Named profiles resolve providers from their own auth.json and .env only; log in per profile or use API keys |
+| Channels | Messaging channels are never cloned unless you pass `--clone-channels`, and that is refused while a multiplexed gateway already serves the source |
+| Switching | `hermes profile use <name>` makes one the sticky default; `hermes profile use default` switches back. `hermes profile list`, `hermes profile export <name>` (keys stripped), `hermes profile delete <name>` |
+| The cost split | Run the planning profile on a frontier model and each worker profile on an inexpensive one, by setting `model.default` in each profile's config.yaml. Decomposing needs judgment; executing a well-specified card mostly does not, and the workers are where the tokens go |
+
+### Commands
+
+*`roster.sh`*
+
+```bash
+# The planner is your default profile. Give the workers a role each.
+hermes profile create coder \
+  --clone \
+  --description "Implements well-specified changes in a repository, runs the tests, opens the PR."
+hermes profile create researcher \
+  --clone \
+  --description "Reads source code and external docs, verifies claims, writes findings with citations."
+hermes profile create writer \
+  --clone --no-skills \
+  --description "Turns findings and decisions into clear documents and messages."
+
+hermes profile list
+coder                       # the alias, same as: hermes -p coder
+hermes -p coder config show
+```
+
+### Prompts
+
+*`prompt-07-roster.md`*
+
+```markdown
+We are going to build my profile roster. Do these in order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/user-guide/profiles
+   and tell me in five lines what a profile contains, what --clone copies,
+   why OAuth logins must never be copied, and how --description is used.
+2. Run hermes profile list and show me what exists.
+3. Propose three worker profiles: coder, researcher, writer. For each,
+   give me the exact hermes profile create command with --clone and a
+   one-sentence --description written as what it is good at.
+4. For each worker, propose the model.default for its config.yaml: an
+   inexpensive model I already have a provider for. Keep my default
+   profile on the frontier model. Show me the three diffs.
+5. For each worker, propose a two-line role paragraph to put at the top
+   of its SOUL.md, above the cloned identity, saying what it is and what
+   it never does. Show me all three.
+6. Do not create anything until I say go. After go: create them, apply
+   the diffs, then run hermes -p coder config show and prove the model
+   took.
+```
+
+*`~/.hermes/profiles/coder/SOUL.md`*
+
+```markdown
+# Role
+
+You are the coder profile. You implement changes that arrive with a clear
+goal, the relevant context, and a definition of done. You run the tests
+before you report. You never decide the design; if a card is ambiguous,
+you block it with a question rather than guessing.
+```
+
+*`~/.hermes/profiles/coder/config.yaml`*
+
+```yaml
+model:
+  default: "your-inexpensive-model"     # the planner keeps the frontier model
+```
+
+> ⚠️ **Isolation cuts both ways**
+>
+> Part 12 already warns about it. A profile has its own memory and its own skills, so a fact the planner learned is not known to the coder unless something carries it across: a card body, a shared `skills.external_dirs` directory, or an external memory provider from Build 6 configured in both profiles. Decide which of those you want before the roster is a week old.
+
+### Verify
+
+- [ ] hermes profile list shows the three workers with their descriptions
+- [ ] The coder alias starts a session whose /model reports the inexpensive model
+- [ ] hermes -p coder status shows its own auth, not a copied OAuth login
+- [ ] Each worker's SOUL.md opens with its role paragraph
+
+## Build 8: Cron
+
+![Build 8](../assets/art/part-06.webp)
+
+### What you are building
+
+Scheduled jobs that carry their whole briefing in the prompt, deliver where you actually read, stay silent when nothing is wrong, and cost zero tokens when no reasoning is needed.
+
+### What the docs say
+
+Checked against the Cron page.
+
+| Fact | Detail |
+|---|---|
+| The gateway must run | Cron lives inside the gateway process. No gateway, no ticks. `hermes gateway setup` from Build 0 |
+| Fresh session, every run | A job runs with no chat history and, unless it carries `--workdir`, no context file. The prompt plus the attached skills are the entire briefing |
+| Creating | `hermes cron create "<schedule>" "<prompt>" [--skill <name>]... [--workdir /abs/path] [--model <m> --provider <p>] [--reasoning-effort <level>] [--name <name>] [--paused]`. From a chat, `/cron add ...` takes the same shape, and the agent's own `cronjob` tool creates jobs when you ask it to |
+| Delivery | The final response is delivered automatically to the origin chat by default, or to explicit targets like `telegram:<chat_id>`, `discord:#channel`, `local`, `all`, or `origin,all`. Do not have the prompt call a send tool for its main delivery |
+| Silence | A successful run whose final response contains `[SILENT]` delivers nothing; the output is still saved under `~/.hermes/cron/output/` for audit. Failed runs always deliver, so a broken monitor cannot go quiet |
+| Zero tokens | `--no-agent --script <path>` runs a script with no model call at all. Stdout is the message, empty stdout is a silent tick, a non-zero exit or timeout delivers an error |
+| Per-job models | A job can pin its own model, provider and reasoning effort. Unpinned jobs snapshot the model at creation; `hermes cron resnap` refreshes that after you change models |
+| Operating | `hermes cron list`, `run <id>` (fire now), `pause`, `resume`, `remove`, `edit`, `runs <id>`, `incidents`, and `hermes cron doctor` for a read-only fleet health check. `hermes pause` is the global stop |
+
+### The prompt discipline
+
+The most common cron mistake follows straight from the fresh-session design. A prompt that would work in a conversation, because the conversation carried the context, fails at three in the morning because nothing carries it.
+
+| Bad | Good |
+|---|---|
+| "Check on that server issue" | "SSH to 203.0.113.10 as deploy. Run systemctl status nginx. Fetch https://example.com and confirm HTTP 200. If both are healthy reply with only [SILENT]. Otherwise report which check failed and the exact output." |
+| "Summarize the news" | "Using the blogwatcher skill, read the feeds it defines, and write five bullets of what changed since yesterday, each with a link. If nothing changed, reply with only [SILENT]." |
+
+### Commands
+
+*`cron-jobs.sh`*
+
+```bash
+# 1. A morning brief that knows your project, delivered to Telegram
+hermes cron create "every 1d at 07:30" \
+  "Read AGENTS.md in this directory. List open pull requests with gh, summarize CI status, and list any issue labeled urgent. Five lines maximum, links included. If there is nothing open and CI is green, reply with only [SILENT]." \
+  --workdir /absolute/path/to/your/repo \
+  --name "morning-brief"
+
+# 2. A zero-token watchdog: the script is the job
+hermes cron create "every 5m" \
+  --no-agent \
+  --script /absolute/path/to/disk-watchdog.sh \
+  --deliver telegram \
+  --name "disk-watchdog"
+
+# 3. The weekly tool-surface canary from Part 12, pinned to a cheap model
+hermes cron create "every 7d at 08:00" \
+  "List every toolset and every tool currently available to you. Compare against the list saved at ~/hermes-tool-baseline.txt. If they match, reply with only [SILENT]. If anything disappeared or appeared, report the difference and overwrite the baseline file with the new list." \
+  --model your-inexpensive-model \
+  --name "tool-canary"
+
+# Operate
+hermes cron list
+hermes cron run morning-brief
+hermes cron doctor
+```
+
+*`disk-watchdog.sh`*
+
+```bash
+#!/bin/sh
+# Prints nothing when healthy. Anything printed is delivered.
+use=$(df -P / | awk 'NR==2 {gsub("%","",$5); print $5}')
+if [ "$use" -ge 85 ]; then
+  echo "Disk on / is at ${use}%"
+fi
+```
+
+### Prompts
+
+*`prompt-08-create-job.md`*
+
+```markdown
+Create a cron job for me. Do these in order.
+
+1. Read the sections on delivery, [SILENT], and per-job models at
+   https://hermes-agent.nousresearch.com/docs/user-guide/features/cron
+   and tell me in four lines how a job gets its context, where its output
+   goes by default, and what [SILENT] does.
+2. Here is the job: <what it should do, when, and where I read the
+   result>.
+3. Write the job prompt as if for a stranger with no history: every path
+   absolute, every check explicit, the silent condition stated, the
+   report format stated. Attach the skills it needs. If it needs a
+   project, set --workdir.
+4. Show me the exact hermes cron create command, or the cronjob tool call,
+   before creating it. After I say go, create it, run it once with
+   hermes cron run, and show me the output from ~/.hermes/cron/output/.
+```
+
+*`prompt-08-audit-jobs.md`*
+
+```markdown
+Run hermes cron list and hermes cron doctor. For every job tell me: name,
+schedule, whether it is pinned to a model, its last status, and one of
+keep, fix, or remove with a reason. Flag any job whose prompt relies on
+context it cannot have in a fresh session. Do not change anything.
+```
+
+### Verify
+
+- [ ] hermes cron list shows each job with the schedule you intended
+- [ ] hermes cron run <name> delivers to the place you read, and the output file exists under ~/.hermes/cron/output/
+- [ ] The watchdog delivers nothing when healthy and one line when you force the threshold
+- [ ] hermes cron doctor reports every job healthy
+
+## Build 9: Delegation and Kanban
+
+![Build 9](../assets/art/part-10.webp)
+
+### What you are building
+
+Delegation that hands well-specified work to a cheap child fleet without leaking your context window, and a kanban board that lets the profiles from Build 7 work a queue without you relaying between them.
+
+### What the docs say
+
+Checked against the Delegation page and the Kanban page.
+
+| Fact | Detail |
+|---|---|
+| The tool | `delegate_task(goal=..., context=...)` for one child; `delegate_task(tasks=[{goal, context}, ...])` for a parallel batch, ten at a time by default via `delegation.max_concurrent_children` |
+| The child knows nothing | No chat history, no memory of the parent's turn. Everything the child needs goes in `goal` and `context`. Its toolsets are the intersection with the parent's, never wider |
+| One model for the fleet | `delegation.model` and `delegation.provider` in config.yaml route every child to one inexpensive model. There is no per-task model on the tool, so quality-sensitive work stays with the parent |
+| Depth | `delegation.max_spawn_depth` defaults to 1: children cannot spawn children unless you raise it. Every level multiplies spend |
+| The board | `hermes kanban init` creates `~/.hermes/kanban.db`. You drive it with `hermes kanban ...`, `/kanban ...`, or the dashboard tab from the bundled plugin. Workers drive it with the `kanban_*` tools, never by shelling out |
+| Cards | `hermes kanban create "<title>" --assignee <profile> --workspace dir:<path> --priority N [--model <m> --provider <p>] [--skill <name>]`. `--triage` parks it for decomposition |
+| Decomposition | Triage cards are fanned out by the decomposer, automatically when `kanban.auto_decompose` is true, or by `hermes kanban decompose <id>` in manual mode. It routes children to profiles by their descriptions from Build 7 |
+| Decide before you fan out | Workers cannot see sibling cards. Any decision two cards would both have to make, a schema, a name, a format, the planner makes once and stamps into both bodies |
+| Health | `hermes kanban dispatch --dry-run` says why a ready card is or is not spawning; `hermes kanban diagnostics` is the board snapshot |
+
+### Delegation
+
+*`~/.hermes/config.yaml`*
+
+```yaml
+model:
+  default: "your-frontier-model"       # the parent plans on this
+delegation:
+  model: "your-inexpensive-model"      # every delegate_task child runs on this
+  provider: "openrouter"               # optional, if the child model lives elsewhere
+```
+
+*`prompt-09-delegate.md`*
+
+```markdown
+Read the sections on the child's context, toolsets, and the delegation
+model at
+https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
+Then set delegation.model to the cheapest capable model I have configured
+and show me the diff before saving.
+
+After I say go, delegate this in parallel, one child per item, and write
+each child's brief so a stranger could do it: the goal in one sentence,
+every fact and path it needs in the context, and the exact output shape
+you want back.
+
+<the three or four independent items>
+
+When the children return, do not paste their raw output. Give me one
+merged result and tell me which child's answer you trusted least and why.
+```
+
+### Kanban
+
+*`kanban.sh`*
+
+```bash
+hermes kanban init
+hermes dashboard                      # the Kanban tab appears after Skills
+
+hermes kanban create "Add rate limiting to the public API" \
+  --assignee coder \
+  --workspace dir:/absolute/path/to/your/repo \
+  --priority 2
+
+hermes kanban create "Research how three competitors price their API tiers" \
+  --assignee researcher \
+  --priority 3
+
+hermes kanban create "Ship the Q4 pricing page" --triage     # let the decomposer fan it out
+hermes kanban decompose <id>                                 # in manual mode
+
+hermes kanban list
+hermes kanban dispatch --dry-run
+hermes kanban diagnostics
+```
+
+*`prompt-09-board.md`*
+
+```markdown
+Set up my kanban board and put the first real work on it. Do these in
+order.
+
+1. Read https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
+   sections on the two surfaces, auto versus manual orchestration, and
+   the cost strategy. Tell me in five lines how a card reaches a worker
+   and what the worker uses to report back.
+2. Run hermes profile list and confirm the workers and their descriptions
+   from Build 7 exist. If a description is vague, propose a better one.
+3. Here is the goal: <one project-sized goal>. Break it into cards. For
+   every decision two cards would both have to make, make it once and
+   put it in both bodies. Each card body carries: goal, context, files it
+   may touch, definition of done.
+4. Show me the cards as hermes kanban create commands with assignee,
+   workspace, and priority. Do not create them until I say go.
+5. After go: create them, run hermes kanban dispatch --dry-run, and tell
+   me what would spawn and what is guarded and why.
+```
+
+> ⚠️ **Restrict the planner**
+>
+> The docs recommend pairing the orchestrator profile with toolsets restricted to board operations, so it cannot execute implementation work even if it tries. `hermes tools` in that profile is where you take the terminal away from it.
+
+### Verify
+
+- [ ] hermes config show reports delegation.model as the inexpensive model
+- [ ] A parallel delegate_task returns one merged answer, and the children ran on the cheap model (hermes insights)
+- [ ] hermes kanban list shows the cards with the right assignees
+- [ ] The dashboard Kanban tab renders the board and a card's drawer shows its body
+
+## Build 10: Tuning and Safety
+
+![Build 10](../assets/art/part-12.webp)
+
+### What you are building
+
+The handful of config keys that decide cost, effort and blast radius, set on purpose; the one prompt that changes any setting safely; and a weekly maintenance habit that keeps the whole setup healthy.
+
+### What the docs say
+
+Checked against the Configuration page, the Security page, and the CLI reference.
+
+| Fact | Detail |
+|---|---|
+| Approvals | `approvals.mode` is `smart` (dangerous commands ask, safe ones run), `manual` (everything asks), or `off`. `approvals.deny` is a list of patterns that are always refused. `approvals.cron_mode` governs unattended runs. `/yolo` toggles approvals in a session |
+| Always on | A hard blocklist of destructive commands, prompt-injection scanning of every context file including SOUL.md, and SSRF protection on outbound requests, regardless of mode |
+| Docker | With `terminal.backend: docker`, the dangerous-command check is skipped because the host is not reachable; the worst case is a wrecked container |
+| Effort | `agent.reasoning_effort` sets the global thinking level: none, minimal, low, medium, high, xhigh, max, ultra. Empty means medium |
+| Side tasks | Every auxiliary task takes its own `provider`, `model` and `reasoning_effort`: `auxiliary.compression`, `auxiliary.vision`, `auxiliary.title_generation`, `auxiliary.background_review`, `auxiliary.kanban_decomposer`. `provider: main` means "whatever the main agent uses" |
+| Compression | `compression.threshold` defaults to 0.50 of the context window; `/compress` forces it |
+| Turn caps | `agent.max_turns` is unlimited by default; `agent.budget_warning_ratio` adds a one-time warning. `goals.max_turns` (default 20) auto-pauses a `/goal` |
+| Verify on stop | `agent.verify_on_stop: true` refuses a final answer on a turn that edited code but produced no fresh verification evidence |
+| Watching cost | `hermes prompt-size` for the per-prompt baseline, `hermes insights` for token, cost and activity analytics |
+| Sessions | `hermes sessions export <file> --redact` scrubs secrets from anything you share; `hermes sessions prune` deletes old ended sessions |
+| Updates | `hermes update --check` previews, `hermes update --backup` snapshots the home directory before pulling |
+
+### The config, annotated
+
+*`~/.hermes/config.yaml`*
+
+```yaml
+agent:
+  reasoning_effort: "medium"       # raise per task, not globally
+  verify_on_stop: true             # no "done" without evidence on coding turns
+  budget_warning_ratio: 0.75       # one warning before a long task runs out
+
+approvals:
+  mode: smart                      # dangerous commands ask, safe ones run
+  deny:
+    - "rm -rf /"
+    - "git push --force*"
+    - "*DROP TABLE*"
+
+auxiliary:
+  compression:
+    reasoning_effort: "low"        # summaries do not need deep thinking
+  vision:
+    reasoning_effort: "none"
+  background_review:
+    provider: openrouter
+    model: your-inexpensive-model
+  kanban_decomposer:
+    provider: main                 # decomposition deserves the frontier model
+
+compression:
+  threshold: 0.50
+```
+
+### The one prompt for any setting
+
+This is the shape the strongest community material converges on, and it works for every key in the configuration reference.
+
+*`prompt-10-change-a-setting.md`*
+
+```markdown
+Read the "<section name>" section of
+https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+Then set <key> to <value> in my config.yaml. Show me the diff before you
+save it, and tell me in one line what will change in my next session.
+After I say go, save it, run hermes config show, and confirm the key
+reads back as set.
+```
+
+### Prompts
+
+*`prompt-10-safety-review.md`*
+
+```markdown
+Read https://hermes-agent.nousresearch.com/docs/user-guide/security
+sections on approvals, the deny list, and unattended runs. Then show me
+my current approvals block from config.yaml and answer:
+
+1. Which mode am I in, and what does that mean for a command like
+   rm -rf on a project folder?
+2. What does a cron job do when it hits a dangerous command under my
+   current cron_mode?
+3. Propose an approvals.deny list for this machine: the five commands
+   that would hurt most if run by mistake, as patterns.
+
+Show me the diff. Do not save until I say go.
+```
+
+*`prompt-10-cost-audit.md`*
+
+```markdown
+Run hermes prompt-size and hermes insights. Tell me:
+
+1. The three largest pieces of my system prompt in bytes and what each
+   one is (skills index, memory, tool schemas, context file).
+2. Which of them I could shrink without losing anything I use weekly,
+   with the exact change.
+3. Which side tasks (compression, vision, background review, titles) run
+   on my main model and what auxiliary.<task>.model I could point each
+   at instead.
+
+Then propose the config diff for the changes you recommend and stop.
+```
+
+### Weekly maintenance
+
+*`weekly.sh`*
+
+```bash
+hermes doctor
+hermes cron doctor
+hermes curator status
+hermes prompt-size
+hermes insights
+hermes backup --quick --label "weekly"
+hermes update --check
+```
+
+- [ ] hermes doctor and hermes cron doctor report nothing broken
+- [ ] The prompt-size total has not crept up without a reason you can name
+- [ ] Skills the curator marked stale are ones you actually stopped using
+- [ ] A backup from this week exists
+- [ ] hermes update --check was read before any update ran, and the update ran with --backup
+
+### Verify
+
+- [ ] hermes config show reads back every key from the annotated config
+- [ ] A dangerous command in a chat asks for approval; a denied pattern is refused outright
+- [ ] A coding turn with no test run is refused a final answer while verify_on_stop is on
+- [ ] hermes insights shows the side tasks on the cheaper models
+
+## The Build Ledger
+
+Ten builds, one line each, with the command that proves it. When every line passes you have the setup this masterclass set out to give you, and every piece of it is documented behavior you can look up.
+
+| Build | Proof |
+|---|---|
+| 0 Day one | hermes doctor clean, five-step tool prompt passed, a backup exists |
+| 1 SOUL.md | A push test in a fresh session stops and asks for a go |
+| 2 USER.md and MEMORY.md | After /new, "what do you know about me" is answered from the file |
+| 3 Project context | A fresh session in the repo names AGENTS.md as its source |
+| 4 Skills | A natural request loads the skill without naming it; /bundle loads all its skills |
+| 5 Plugins | hermes plugins list shows the two safety plugins enabled |
+| 6 Memory stack | hermes memory status names one provider; a fact survives /new; the vault has notes |
+| 7 Profiles | hermes profile list shows the roster; the coder alias reports the cheap model |
+| 8 Cron | hermes cron run delivers where you read; the watchdog is silent when healthy |
+| 9 Delegation and kanban | delegation.model is set; the board shows cards and the dashboard renders them |
+| 10 Tuning and safety | A denied pattern is refused; hermes insights shows side tasks on cheaper models |
+
+> ✅ **What compounds from here**
+>
+> Part 3 said it and the builds prove it: a Hermes you have run for three months is a different agent from the one you installed. The memory files carry the facts, the skills carry the procedures, the provider carries the model of you, the vault carries what you chose to keep, and the cron jobs keep all four current while you sleep. None of that needs custom code. It needs the ten files and the ten config blocks above, written once, tested once, and left to run.
+
 ## Appendix A: Complete Command Index
 
 Every command the twelve parts name, collected. Commands are grouped by what you are trying to do rather than by subsystem, because that is how you will look for them.
@@ -1312,31 +2900,43 @@ hermes -p <name> chat                              # run in a specific profile
 
 ## Appendix B: Every Path and What Lives There
 
-**The ~/.hermes tree, as the series describes it**
+**The ~/.hermes tree, as the series and the official docs describe it**
 
 ```text
-~/.hermes/                          the entire agent, one directory
-  config.yaml                       per-profile configuration
+~/.hermes/                          the entire agent, one directory (HERMES_HOME)
+  config.yaml                       non-secret settings, per profile
+  .env                              secrets and tokens, never config
+  SOUL.md                           agent identity, slot 1, loaded from here only
   state.db                          SQLite: sessions, titles, FTS5 search, lineage
-  MEMORY.md                         agent notes · ~2,200 char hard limit
-  USER.md                           your profile · preferences and style
-  SOUL.md                           agent identity (stable prompt tier)
+  memories/
+    MEMORY.md                       agent notes · 2,200 char hard limit
+    USER.md                         your profile · 1,375 char hard limit
   skills/
     <category>/<name>/SKILL.md      one skill, frontmatter + four sections
     .archive/                       curator-archived skills (recoverable)
+    .curator_backups/<utc>/         tar.gz snapshot before every curator pass
+  skill-bundles/<slug>.yaml         one bundle = one slash command
+  plugins/<name>/                   user plugins: plugin.yaml + __init__.py
+  profiles/<name>/                  each profile is a whole separate home
   cron/
     jobs.json                       the job store, atomically written
-    .tick.lock                      prevents overlapping 60s ticks
     output/<job_id>/<timestamp>.md  every run's output, kept for audit
-  kanban/                           SQLite task board for multi-agent work
-  home/                             per-profile home when home_mode: profile
+  kanban.db                         SQLite task board for multi-agent work
+  honcho.json                       provider settings when Honcho is active
+  mem0.json                         provider settings when Mem0 is active
+  hindsight/config.json             provider settings when Hindsight is active
+  import-sync.json                  what hermes import-agent pulled, and from where
+  hermes-agent/                     the installed code (curl installer default)
+  workspace/                        scratch the agent and some plugins use
 
   (in Docker, all of the above is mounted at /opt/data)
 
-project directory/                  context tier, ONE of these, by priority
-  .hermes.md                          1st, wins over the others
-  AGENTS.md                           2nd
-  CLAUDE.md                           3rd, only if neither above exists
+project directory/                  context tier, ONE type loads, first match wins
+  .hermes.md                          1st
+  AGENTS.override.md                  2nd, personal, replaces AGENTS.md, keep it gitignored
+  AGENTS.md                           3rd, merged as a chain from the git root down
+  CLAUDE.md                           4th
+  .cursorrules                        5th
 ```
 
 ## Appendix C: Every Number in One Table
@@ -1420,6 +3020,10 @@ They do work. They are just not the place for adjectives.
 | USER.md | Who am I, what do I prefer, what should you never ask twice | You, plus the background review | Shares the ~1,300 token memory budget |
 | MEMORY.md | What has the agent learned about my environment and projects | The agent, via the background review | 2,200 characters, hard |
 | AGENTS.md or .hermes.md | How does THIS project work | You, per project | Per working directory, one file wins |
+
+> ℹ️ **Where the files live**
+>
+> SOUL.md is `~/.hermes/SOUL.md` and Hermes loads it from that home directory only, never from the folder you launched in. USER.md and MEMORY.md live in `~/.hermes/memories/`. Builds 1 and 2 in the Build Track walk through writing all three with the agent's help, doc page first, diff before save.
 
 > ⚠️ **The single most common mistake**
 >
@@ -1600,7 +3204,7 @@ environment. Not for library releases and not for database migrations.
 
 Bundles exist for combinations you run constantly. They do not replace the individual skills and they carry no procedure of their own.
 
-*`~/.hermes/skills/bundles/ship-it.yaml`*
+*`~/.hermes/skill-bundles/ship-it.yaml`*
 
 ```yaml
 name: ship-it
@@ -1611,7 +3215,7 @@ skills:
   - deploy-web
 ```
 
-Running `/ship-it fix the login redirect` loads all three skill bodies and the agent follows all three sets of instructions against the one task.
+Running `/ship-it fix the login redirect` loads all three skill bodies and the agent follows all three sets of instructions against the one task. Bundles live in `~/.hermes/skill-bundles/`, and `hermes bundles create ship-it --skill code-review --skill run-tests --skill deploy-web -d "..."` writes the file for you. Build 4 in the Build Track has the full schema, including the optional `instruction` block.
 
 ### Installing from the hub, safely
 
@@ -1837,6 +3441,33 @@ All twelve parts by Tony Simons (@tonysimons_), published on X between July 5 an
 
 The author also references two companion pieces worth reading alongside the series: a guide to your first two weeks with Hermes Agent, and an earlier deep dive on kanban from May 2026. Official installation documentation lives at `hermes-agent.nousresearch.com/docs/getting-started/installation`.
 
+### Sources for the Build Track
+
+Every prompt, template and config block in the Build Track was checked against these, in September 2026. The documentation is the authority; when it and this document disagree, the documentation has moved and this document is behind.
+
+| Build | Documentation pages (hermes-agent.nousresearch.com/docs/...) |
+|---|---|
+| 0 | getting-started/quickstart · getting-started/installation · reference/cli-commands |
+| 1 | user-guide/features/personality · the default SOUL.md in the Hermes repository |
+| 2 | user-guide/features/memory · user-guide/import-from-other-agents · user-guide/sessions |
+| 3 | user-guide/features/context-files |
+| 4 | user-guide/features/skills · developer-guide/creating-skills · user-guide/features/curator |
+| 5 | user-guide/features/plugins · user-guide/features/built-in-plugins |
+| 6 | user-guide/features/memory-providers · user-guide/features/honcho · skills/note-taking/obsidian/SKILL.md in the Hermes repository |
+| 7 | user-guide/profiles · the cost-strategy section of user-guide/features/kanban |
+| 8 | user-guide/features/cron |
+| 9 | user-guide/features/delegation · user-guide/features/kanban |
+| 10 | user-guide/configuration · user-guide/security · reference/cli-commands |
+
+Community material that shaped the prompt pattern and the worked patterns, all public:
+
+| Source | What it contributed |
+|---|---|
+| Hermes Wingtips, a numbered tip series by @witcheer on X, 75 tips as of September 2026 | The "hand this to your agent: read the docs section, set the key, show me the diff before you save" pattern that every Build Track prompt follows |
+| Hermes Release Watch (@HermesWatcher on X), the one-page command cheat sheet | The daily command set in Build 0 was checked against it |
+| Tonbi's AI Garage, the eleven-video Hermes Agent Masterclass on YouTube | The memory-layer framing in Build 6, the cron prompt discipline in Build 8, and the delegation cost notes in Build 9 |
+| The Hermes user stories page on the official site | The nightly consolidation job in Build 6 follows a pattern one operator described publicly; the profile roster shape in Build 7 echoes several |
+
 > 📝 **What this document added**
 >
-> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-three diagrams, thirteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, and the configuration and prompt guidance in Appendices F, G and H. Nothing was invented about how Hermes behaves; where a number appears it came from the source.
+> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-six diagram plates, fourteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, the configuration and prompt guidance in Appendices F, G and H, and the whole of the Build Track. Nothing was invented about how Hermes behaves; every number, path, key and command came from the source series or from the official documentation named above.

@@ -57,7 +57,7 @@ environment. Not for library releases and not for database migrations.
 
 Bundles exist for combinations you run constantly. They do not replace the individual skills and they carry no procedure of their own.
 
-*`~/.hermes/skills/bundles/ship-it.yaml`*
+*`~/.hermes/skill-bundles/ship-it.yaml`*
 
 ```yaml
 name: ship-it
@@ -68,7 +68,7 @@ skills:
   - deploy-web
 ```
 
-Running `/ship-it fix the login redirect` loads all three skill bodies and the agent follows all three sets of instructions against the one task.
+Running `/ship-it fix the login redirect` loads all three skill bodies and the agent follows all three sets of instructions against the one task. Bundles live in `~/.hermes/skill-bundles/`, and `hermes bundles create ship-it --skill code-review --skill run-tests --skill deploy-web -d "..."` writes the file for you. Build 4 in the Build Track has the full schema, including the optional `instruction` block.
 
 ### Installing from the hub, safely
 

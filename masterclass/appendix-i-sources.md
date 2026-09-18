@@ -20,9 +20,36 @@ All twelve parts by Tony Simons (@tonysimons_), published on X between July 5 an
 
 The author also references two companion pieces worth reading alongside the series: a guide to your first two weeks with Hermes Agent, and an earlier deep dive on kanban from May 2026. Official installation documentation lives at `hermes-agent.nousresearch.com/docs/getting-started/installation`.
 
+### Sources for the Build Track
+
+Every prompt, template and config block in the Build Track was checked against these, in September 2026. The documentation is the authority; when it and this document disagree, the documentation has moved and this document is behind.
+
+| Build | Documentation pages (hermes-agent.nousresearch.com/docs/...) |
+|---|---|
+| 0 | getting-started/quickstart · getting-started/installation · reference/cli-commands |
+| 1 | user-guide/features/personality · the default SOUL.md in the Hermes repository |
+| 2 | user-guide/features/memory · user-guide/import-from-other-agents · user-guide/sessions |
+| 3 | user-guide/features/context-files |
+| 4 | user-guide/features/skills · developer-guide/creating-skills · user-guide/features/curator |
+| 5 | user-guide/features/plugins · user-guide/features/built-in-plugins |
+| 6 | user-guide/features/memory-providers · user-guide/features/honcho · skills/note-taking/obsidian/SKILL.md in the Hermes repository |
+| 7 | user-guide/profiles · the cost-strategy section of user-guide/features/kanban |
+| 8 | user-guide/features/cron |
+| 9 | user-guide/features/delegation · user-guide/features/kanban |
+| 10 | user-guide/configuration · user-guide/security · reference/cli-commands |
+
+Community material that shaped the prompt pattern and the worked patterns, all public:
+
+| Source | What it contributed |
+|---|---|
+| Hermes Wingtips, a numbered tip series by @witcheer on X, 75 tips as of September 2026 | The "hand this to your agent: read the docs section, set the key, show me the diff before you save" pattern that every Build Track prompt follows |
+| Hermes Release Watch (@HermesWatcher on X), the one-page command cheat sheet | The daily command set in Build 0 was checked against it |
+| Tonbi's AI Garage, the eleven-video Hermes Agent Masterclass on YouTube | The memory-layer framing in Build 6, the cron prompt discipline in Build 8, and the delegation cost notes in Build 9 |
+| The Hermes user stories page on the official site | The nightly consolidation job in Build 6 follows a pattern one operator described publicly; the profile roster shape in Build 7 echoes several |
+
 > 📝 **What this document added**
 >
-> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-three diagrams, thirteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, and the configuration and prompt guidance in Appendices F, G and H. Nothing was invented about how Hermes behaves; where a number appears it came from the source.
+> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-six diagram plates, fourteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, the configuration and prompt guidance in Appendices F, G and H, and the whole of the Build Track. Nothing was invented about how Hermes behaves; every number, path, key and command came from the source series or from the official documentation named above.
 
 ---
 

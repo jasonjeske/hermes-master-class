@@ -15,6 +15,10 @@ They do work. They are just not the place for adjectives.
 | MEMORY.md | What has the agent learned about my environment and projects | The agent, via the background review | 2,200 characters, hard |
 | AGENTS.md or .hermes.md | How does THIS project work | You, per project | Per working directory, one file wins |
 
+> ℹ️ **Where the files live**
+>
+> SOUL.md is `~/.hermes/SOUL.md` and Hermes loads it from that home directory only, never from the folder you launched in. USER.md and MEMORY.md live in `~/.hermes/memories/`. Builds 1 and 2 in the Build Track walk through writing all three with the agent's help, doc page first, diff before save.
+
 > ⚠️ **The single most common mistake**
 >
 > Putting project facts in SOUL.md. Identity is stable and global; project facts belong in that project's context file, where they load only when you are working there. A SOUL.md that names your current client is a SOUL.md that will be wrong in three months and will still be costing tokens in every unrelated conversation.
