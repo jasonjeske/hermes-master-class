@@ -50,18 +50,7 @@ The dashboard is **optional**. Everything it does can be done through the CLI. F
 
 Hermes exposes an **OpenAI-compatible HTTP endpoint**. Any frontend that speaks the OpenAI format can drive it: Open WebUI, LobeChat, LibreChat and similar.
 
-**Four surfaces, one agent loop**
-
-```mermaid
-flowchart LR
-  A["CLI / TUI"] --> L
-  B["Messaging gateway"] --> L
-  C["Web dashboard"] --> L
-  D["OpenAI-compatible · API server"] --> L
-  L["The SAME agent loop · same prompt, tools, memory, skills, sessions"]
-  L --> S[("Shared session store")]
-  D -.->|"handles"| E["auth, rate limiting, session management · one session per user"]
-```
+![Four surfaces, one agent loop](../assets/art/d19.webp)
 
 The only difference between surfaces is the transport. The API server routes requests through the active profile's agent loop with the same prompt assembly, tool dispatch and session persistence the CLI uses. That is what makes a custom frontend or a team-shared interface cheap to build: you are not reimplementing the agent, only changing how messages arrive.
 

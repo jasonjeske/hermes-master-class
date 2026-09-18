@@ -98,3 +98,7 @@ tr:last-child td{border-bottom:none}
   .mast h1{font-size:44px} .mast .sub{font-size:21px}
   h2{font-size:34px} h3{font-size:24px}
 }
+
+/* generated diagram plates */
+.figure-img{margin:30px 0 34px;border:1px solid var(--line);border-radius:12px;overflow:hidden;line-height:0;background:var(--bg-2)}
+.figure-img img{width:100%;height:auto;display:block}

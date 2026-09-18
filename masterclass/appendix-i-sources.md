@@ -22,7 +22,7 @@ The author also references two companion pieces worth reading alongside the seri
 
 > 📝 **What this document added**
 >
-> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-four workflow diagrams, thirteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, and the configuration and prompt guidance in Appendices F, G and H. Nothing was invented about how Hermes behaves; where a number appears it came from the source.
+> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-three diagrams, thirteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, and the configuration and prompt guidance in Appendices F, G and H. Nothing was invented about how Hermes behaves; where a number appears it came from the source.
 
 ---
 

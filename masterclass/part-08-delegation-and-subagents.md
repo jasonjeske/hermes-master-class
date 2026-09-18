@@ -20,19 +20,7 @@ A single task creates one child. A batch creates up to three by default, running
 
 ### When to delegate, and when not to
 
-**Delegate, or script it?**
-
-```mermaid
-flowchart TB
-  T["A task arrives"] --> Q{"Does it need · reasoning and judgment?"}
-  Q -->|"no · deterministic steps"| EC["execute_code · a Python script · cheaper, no LLM loop"]
-  Q -->|"yes"| Q2{"Is it parallelizable · or context-heavy?"}
-  Q2 -->|"no"| INLINE["Just do it in the parent session"]
-  Q2 -->|"yes"| DEL["delegate_task · isolated context, own budget · only the summary returns"]
-  DEL --> P1["Parallel research · 3 topics at once"]
-  DEL --> P2["Code review and fix · parent never sees the debugging"]
-  DEL --> P3["Multi-file refactor · 20 files of intermediate context stays out"]
-```
+![Delegate, or script it?](../assets/art/d15.webp)
 
 The three patterns the author calls out, with what each one actually buys:
 

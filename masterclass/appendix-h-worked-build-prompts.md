@@ -4,21 +4,7 @@ Everything up to here describes what Hermes can do. This appendix is about how t
 
 ### The pattern underneath both
 
-**The shape of a prompt that produces a working system**
-
-```mermaid
-flowchart TB
-  A["1 · PROBE THE ENVIRONMENT · what is actually installed and authenticated?"]
-  B["2 · NAME THE STRUCTURE · which files hold which kind of truth"]
-  C["3 · NAME THE WORKFLOWS · the few processes the system supports"]
-  D["4 · SET THE APPROVAL BOUNDARY · what it may do alone, what always stops"]
-  E["5 · TEST ON A BOUNDED BATCH · representative cases, including the hard ones"]
-  F["6 · AUTOMATE ONLY AFTER · propose the schedule, do not enable it"]
-  A --> B --> C --> D --> E --> F
-  A -.->|"refuses to assume Gmail, Cron, or any integration is configured"| A2["Ask only for what is genuinely missing"]
-  D -.->|"the line that keeps an unattended agent safe"| D2["Read and draft freely · never send, delete or spend"]
-  E -.->|"duplicate names, resolved items, coverage gaps"| E2["Fix routing before it runs unattended"]
-```
+![The shape of a prompt that produces a working system](../assets/art/d24.webp)
 
 Six moves, and the order matters more than the wording. Most failed agent builds skip move 1 and move 5: they assume an integration is ready, and they automate before testing on real messy input.
 

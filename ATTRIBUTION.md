@@ -22,8 +22,9 @@ He published the whole series free, with no paywall and no email wall.
 Everything below was written while assembling this reference and is not part of
 the original series:
 
-- Twenty-four workflow diagrams, all drawn for this compilation
+- Twenty-three diagram plates, all produced for this compilation
 - Thirteen original illustrations, a hero and one per part, generated for this compilation
+- Thirty-six original images in total, none taken from the source articles
 - The consolidated constants table (Appendix C) and failure-triage table (Appendix D)
 - The front-loaded vocabulary table
 - Twelve operator drills, one per part

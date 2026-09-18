@@ -28,20 +28,7 @@ version: 1.0.0
 
 The **body** holds the procedure. The docs recommend four sections, and the four are not arbitrary, each one answers a question the agent would otherwise have to guess.
 
-**How the agent reads a skill, section by section**
-
-```mermaid
-flowchart LR
-  F["FRONTMATTER · name, description, version"] -->|"the INDEX carries the description"| M{"Request matches the description?"}
-  M -->|"no"| SKIP["Never loaded · costs one index line"]
-  M -->|"yes"| W["WHEN TO USE · confirms the trigger"]
-  W --> P["PROCEDURE · numbered concrete actions"]
-  P --> PIT["PITFALLS · checked BEFORE acting"]
-  PIT --> EX["Execute the steps"]
-  EX --> V["VERIFICATION · did it actually work?"]
-  V -->|"pass"| DONE["Report success"]
-  V -->|"fail"| P
-```
+![How the agent reads a skill, section by section](../assets/art/d08.webp)
 
 | Section | The question it answers | What a weak version looks like |
 |---|---|---|

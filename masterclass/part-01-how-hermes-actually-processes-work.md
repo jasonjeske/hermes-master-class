@@ -18,31 +18,7 @@ That last detail is worth pausing on. **Three wire protocols, one internal repre
 
 ### The five stages, in order, every time
 
-**Stages 1 to 3 · preparing the call**
-
-```mermaid
-flowchart LR
-  M["User message arrives"] --> A["1 · PROMPT ASSEMBLY · 10+ layers into 3 ordered tiers"]
-  A --> B["2 · PROVIDER RESOLUTION · endpoint, key, mode · 18+ providers"]
-  B --> C{"3 · PREFLIGHT · context over 50%?"}
-  C -->|"no"| READY["Ready to send"]
-  C -->|"yes"| C2["Compress · summarize the middle · keep last 20 · new lineage ID"]
-  C2 --> READY
-```
-
-**Stages 4 and 5 · the call, and the loop that repeats**
-
-```mermaid
-flowchart LR
-  READY["Assembled context"] --> D["4 · API CALL · background thread · interrupt watcher"]
-  D --> E{"429 or 5xx?"}
-  E -->|"yes"| F["Next fallback provider"] --> D
-  E -->|"no"| G{"5 · RESPONSE · text or tool_call?"}
-  G -->|"text"| H["Persist to the session store · done"]
-  G -->|"tool_call"| I["Dispatch through the registry"]
-  I --> J["Results appended as tool-role messages"]
-  J -->|"loop back to the API call"| D
-```
+![The five stages of one turn through the agent loop](../assets/art/d02.webp)
 
 **1. Prompt assembly.** The system builds your context from ten-plus layers. SOUL.md for identity. Skills for procedural knowledge. Memory and user profile snapshots. Context files from your project directory. Platform hints for where you are chatting from. All assembled into three ordered tiers: stable, context, volatile.
 
@@ -80,28 +56,7 @@ Multiple tool calls from a single model response run **concurrently** via a thre
 
 The reason Hermes gets better over time is not magic, it is structural. The system prompt is built as three ordered tiers.
 
-**The three prompt tiers and what invalidates each**
-
-```mermaid
-flowchart TB
-  subgraph S["STABLE · cached by the provider"]
-    A1["SOUL.md identity"]
-    A2["Tool guidance"]
-    A3["Skills INDEX"]
-    A4["Environment + platform hints"]
-  end
-  subgraph C["CONTEXT · one file only, by priority"]
-    B1[".hermes.md  1st"] --> B2["AGENTS.md  2nd"] --> B3["CLAUDE.md  3rd"]
-  end
-  subgraph V["VOLATILE · frozen for the session"]
-    C1["Memory snapshot"]
-    C2["User profile snapshot"]
-    C3["Timestamp, session, model"]
-  end
-  S --> C --> V --> P["Assembled system prompt"]
-  S -.->|"never changes mid-conversation"| CACHE["Prefix stays cacheable"]
-  V -.->|"written mid-session · visible NEXT session"| NEXT["Rebuild on new session, compression or invalidation"]
-```
+![The three prompt tiers and what invalidates each](../assets/art/d04.webp)
 
 | Tier | Contents | Changes when |
 |---|---|---|

@@ -4,7 +4,7 @@
 
 ### ➡️ [**Read the whole masterclass in one page**](masterclass/FULL-MASTERCLASS.md)
 
-*All 24 sections top to bottom, with every illustration and diagram inline and a linked table of contents. 12 parts, 9 appendices, 24 diagrams, 40+ reference tables.*
+*All 24 sections top to bottom, with every illustration and diagram inline and a linked table of contents. 12 parts, 9 appendices, 36 original images, 40+ reference tables.*
 
 ---
 
@@ -28,8 +28,8 @@ The original article artwork is not reproduced here. The illustrations in this r
 
 | Format | File | Best for |
 |---|---|---|
-| **Web page** | [`document/hermes-agent-masterclass.html`](document/hermes-agent-masterclass.html) | The full experience. Large-type reading layout, section illustrations, 21 live diagrams, fully offline, zero network calls |
-| **PDF** | [`document/hermes-agent-masterclass.pdf`](document/hermes-agent-masterclass.pdf) | 110 pages, large type, selectable text, every diagram as vector art |
+| **Web page** | [`document/hermes-agent-masterclass.html`](document/hermes-agent-masterclass.html) | The full experience. Large-type reading layout, 36 original illustrations and diagram plates, fully offline, zero network calls |
+| **PDF** | [`document/hermes-agent-masterclass.pdf`](document/hermes-agent-masterclass.pdf) | 101 pages, large type, selectable text, every diagram as a full-width plate |
 | **Markdown** | [`masterclass/`](masterclass/) | Reading on GitHub, diffing, quoting, or feeding to an agent |
 | **One file** | [`masterclass/FULL-MASTERCLASS.md`](masterclass/FULL-MASTERCLASS.md) | The whole thing in a single markdown file |
 
@@ -98,10 +98,10 @@ Everything in the twelve parts is a consequence of that loop existing.
 
 ```text
 README.md                         you are here
-assets/art/                       13 original illustrations, hero plus one per part
+assets/art/                       36 original images: hero, one per part, and 23 diagram plates
 document/
   hermes-agent-masterclass.html   the full document, self-contained and offline
-  hermes-agent-masterclass.pdf    110 pages, large-type print layout
+  hermes-agent-masterclass.pdf    101 pages, large-type print layout
   source.md                       the authored source the HTML and PDF are built from
 masterclass/
   00-*.md                         orientation, the system graph, the index
@@ -110,7 +110,7 @@ masterclass/
   FULL-MASTERCLASS.md             everything in one file
 ```
 
-The markdown uses GitHub-flavored tables and fenced `mermaid` blocks, so every diagram renders natively here with nothing to install.
+The markdown uses GitHub-flavored tables and inline images, so everything renders here with nothing to install.
 
 ---
 
@@ -120,7 +120,7 @@ Two kinds of material, two different statuses. Full detail in [LICENSE](LICENSE)
 
 | Layer | Status |
 |---|---|
-| The illustrations, all 24 diagrams, the reference tables, the operator drills, and Appendices E through H | **CC BY 4.0.** Share and adapt freely, including commercially, with credit |
+| All 36 illustrations and diagrams, the reference tables, the operator drills, and Appendices E through H | **CC BY 4.0.** Share and adapt freely, including commercially, with credit |
 | The substance of Parts 1 to 12 | **Tony Simons' work.** Published free by the author, reproduced here with credit, and not relicensed by this repository |
 | The build tooling in `build/` | **MIT.** See [LICENSE-CODE](LICENSE-CODE) |
 | Bundled Mermaid in the HTML | **MIT.** See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) |

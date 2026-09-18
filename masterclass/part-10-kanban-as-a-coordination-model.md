@@ -24,19 +24,7 @@ Each task has an **assignee field that maps to a Hermes profile**. When a profil
 
 ### Read, claim, execute
 
-**Read, claim, execute, and how profiles stay out of each other's way**
-
-```mermaid
-flowchart TB
-  B[("Kanban board · SQLite · ~/.hermes/kanban/")]
-  B -->|"1 READ · query by state, tag, assignee"| A["Agent sees structured task data · with all the context it needs"]
-  A -->|"2 CLAIM · assign self, todo → in_progress"| C["Other profiles see it is claimed and skip it"]
-  C -->|"3 EXECUTE · any tool in its toolset"| D["Work happens"]
-  D -->|"move to review or done + lifecycle note"| B
-  PA["Profile A · orchestrator · creates and assigns"] --> B
-  PB["Profile B · worker · claims todo, executes"] --> B
-  PC["Profile C · reviewer · validates or rejects"] --> B
-```
+![Read, claim, execute, and how profiles stay out of each other's way](../assets/art/d18.webp)
 
 **Read.** The agent queries the board for tasks in a relevant state. An orchestrator might query all `todo` tasks tagged "research"; a worker might query `in_progress` tasks assigned to itself.
 

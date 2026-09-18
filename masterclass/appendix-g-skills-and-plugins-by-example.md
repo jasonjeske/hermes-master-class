@@ -4,20 +4,7 @@ Part 4 covers the anatomy of a skill and why progressive disclosure lets a libra
 
 ### Skill, bundle, or plugin
 
-**Choosing the right extension point**
-
-```mermaid
-flowchart TB
-  N["I want the agent to do something new"] --> Q1{"Is it a PROCEDURE the agent could follow with existing tools?"}
-  Q1 -->|"yes"| SK["Write a SKILL · a markdown file · no code, no install"]
-  Q1 -->|"no · it needs a NEW capability"| Q2{"Does an MCP server already expose it?"}
-  Q2 -->|"yes"| MCP["Connect the MCP server · tools register at runtime"]
-  Q2 -->|"no"| Q3{"Do you need it in the tool registry with its own check_fn?"}
-  Q3 -->|"yes"| PL["Write a PLUGIN · real code · last resort"]
-  Q3 -->|"no"| SK
-  SK --> B{"Do you run several skills together every single time?"}
-  B -->|"yes"| BUN["Add a BUNDLE · a YAML alias for the combination"]
-```
+![Choosing the right extension point](../assets/art/d23.webp)
 
 The ordering is not arbitrary. A skill costs one markdown file and one index line. A plugin costs code you now maintain against a moving project. Part 12's advice is explicit: skip custom plugin development until the built-in tools genuinely do not cover the case.
 

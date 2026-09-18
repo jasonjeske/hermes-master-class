@@ -6,27 +6,7 @@ They do work. They are just not the place for adjectives.
 
 ### Three files, three different jobs
 
-**What belongs in which file**
-
-```mermaid
-flowchart LR
-  subgraph STABLE["STABLE tier · cached · never changes mid-conversation"]
-    S["SOUL.md · who the agent is · how it behaves · what it never does"]
-    SK["Skills index · how to do specific jobs"]
-  end
-  subgraph CONTEXT["CONTEXT tier · one per working directory"]
-    A[".hermes.md / AGENTS.md · how THIS project works"]
-  end
-  subgraph VOLATILE["VOLATILE tier · frozen per session · written between them"]
-    U["USER.md · stable facts about YOU"]
-    M["MEMORY.md · what the agent learned · env facts, conventions"]
-  end
-  STABLE --> P["Assembled prompt"]
-  CONTEXT --> P
-  VOLATILE --> P
-  W["Background review after every turn"] -.->|"proposes writes"| U
-  W -.->|"proposes writes"| M
-```
+![What belongs in which file](../assets/art/d22.webp)
 
 | File | Answers | Written by | Budget |
 |---|---|---|---|

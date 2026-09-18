@@ -31,27 +31,7 @@ Every conversation with Hermes is saved as a session, stored in a SQLite databas
 
 This is the infrastructure that makes the learning loop work. Without it, every conversation starts from zero and the agent has no way to build on previous work.
 
-**Where sessions survive, and where they do not**
-
-```mermaid
-flowchart LR
-  subgraph OK["Survives a restart"]
-    L["Local desktop · ~/.hermes/state.db in your home"]
-    D["Docker WITH volume mount · ~/.hermes → /opt/data"]
-  end
-  subgraph RISK["Conditional"]
-    S["Serverless (Daytona / Modal) · hibernates with the environment"]
-  end
-  subgraph FAIL["Silently loses everything"]
-    DN["Docker WITHOUT volume mount · fresh empty store every start"]
-  end
-  L --> T{"The test · start a chat, stop the agent, restart, run hermes -c"}
-  D --> T
-  S --> T
-  DN --> T
-  T -->|"conversation returns"| PASS["Foundation is sound"]
-  T -->|"starts fresh"| STOP["Fix storage before building anything"]
-```
+![Where sessions survive, and where they do not](../assets/art/d05.webp)
 
 On serverless backends the environment hibernates when idle and the agent's state hibernates with it. Sessions resume when it wakes, but the agent is not reachable during hibernation. That is fine for scheduled cron work. It is not fine if you want to ping the agent from Telegram and get an answer in real time.
 

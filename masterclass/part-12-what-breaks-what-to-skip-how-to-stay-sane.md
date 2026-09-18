@@ -10,25 +10,7 @@ Hermes is the most capable open-source agent the author has used. It is also a c
 
 Every model has a context window and Hermes runs inside it.
 
-**Context pressure, and the two thresholds that fire**
-
-```mermaid
-flowchart LR
-  subgraph W["One context window, everything competes"]
-    A["System prompt"]
-    B["Memory snapshot"]
-    C["Skills index"]
-    D["Conversation history"]
-    E["Tool call results"]
-  end
-  W --> P{"Fill level"}
-  P -->|"under 50%"| OK["Normal operation"]
-  P -->|"50% · preflight"| CMP["Compress BEFORE the call · keep last 20 · new lineage ID"]
-  P -->|"85% · gateway"| CMP
-  CMP --> LOSS["Nuance is gone. · Automatic, invisible, destructive."]
-  LOSS --> RULE["Past ~30 tool calls, delegate or split"]
-  E -.->|"one research task = 9 call-and-result pairs"| P
-```
+![Context pressure, and the two thresholds that fire](../assets/art/d20.webp)
 
 The system prompt, memory snapshot, skills index, conversation history and tool call results all compete for the same limited space.
 
@@ -96,18 +78,7 @@ Not every feature is worth your time on day one. Some are genuinely useful for a
 
 Hermes is an agent with a tool surface. It is not the right tool for every task, and knowing the boundary is part of using it well.
 
-**Should this task go to Hermes at all?**
-
-```mermaid
-flowchart TB
-  T["A task arrives"] --> Q1{"Needs TOOLS? web, terminal, files, browser"}
-  Q1 -->|"no"| RAW["Use a raw LLM call · the loop is pure overhead"]
-  Q1 -->|"yes"| Q2{"Byte-identical output every run?"}
-  Q2 -->|"yes"| SCRIPT["Script the tools directly · the loop is non-deterministic"]
-  Q2 -->|"no"| Q3{"Latency over capability?"}
-  Q3 -->|"yes"| API["Call the API directly · tool calls add round trips"]
-  Q3 -->|"no"| HERMES["Use Hermes · this is what the loop is for"]
-```
+![Should this task go to Hermes at all?](../assets/art/d21.webp)
 
 | Do not use it for | Because | Use instead |
 |---|---|---|

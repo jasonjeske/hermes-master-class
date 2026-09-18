@@ -10,32 +10,9 @@ Every part so far has described a reactive system. You send a message, the agent
 
 The cron system lives inside the gateway daemon. Every 60 seconds the scheduler ticks.
 
-**The tick · which jobs fire**
+![The tick - which jobs fire](../assets/art/d10.webp)
 
-```mermaid
-flowchart LR
-  T["Tick · every 60s"] --> L{"Acquire ~/.hermes/cron/.tick.lock"}
-  L -->|"held by a slow tick"| W["Wait · no double-run"]
-  L -->|"acquired"| J["Load jobs from ~/.hermes/cron/jobs.json"]
-  J --> D{"next_run_at due?"}
-  D -->|"no"| SKIP["Skip"]
-  D -->|"yes"| RUN["Run the job"]
-```
-
-**Running a due job · two modes**
-
-```mermaid
-flowchart LR
-  RUN["A due job"] --> MODE{"no-agent mode?"}
-  MODE -->|"yes"| SH["Run the script · deliver stdout verbatim · ZERO tokens"]
-  MODE -->|"no"| F["Fresh AIAgent session · no history · no memory"]
-  F --> SK["Inject attached skills as context"]
-  SK --> P["Run the prompt to completion"]
-  P --> OUT["Deliver to the configured target(s)"]
-  SH --> OUT
-  OUT --> SAVE["Save to ~/.hermes/cron/output/{job_id}/{timestamp}.md"]
-  SAVE --> UPD["Update last_run and next_run_at · atomic write"]
-```
+![Running a due job - two modes](../assets/art/d11.webp)
 
 The file lock at `~/.hermes/cron/.tick.lock` prevents overlapping ticks from double-running the same batch. If a tick takes longer than 60 seconds, the next one waits. Atomic file writes prevent corrupted job data from a crashed write.
 
@@ -114,16 +91,7 @@ The agent can set these up for you. Describe the watchdog in chat, "Ping me on T
 
 Cron jobs run in isolated sessions with no memory of previous runs. But sometimes one job's output is exactly what the next needs.
 
-**A three-stage cron pipeline**
-
-```mermaid
-flowchart LR
-  A["Job A · collect · every 1h"] -->|"context_from: A · last output prepended"| B["Job B · filter and rank · every 6h"]
-  B -->|"context_from: B"| C["Job C · format and deliver · daily 08:00"]
-  C --> D["Telegram + Discord"]
-  PRE["Pre-check script"] -.->|"emits {wakeAgent: false}"| SKIP["Agent turn skipped entirely · nothing paid"]
-  PRE -.->|"emits {wakeAgent: true}"| A
-```
+![A three-stage cron pipeline](../assets/art/d12.webp)
 
 The `context_from` parameter wires the connection automatically: Job B gets Job A's most recent output prepended as context at runtime. The chain can be any length, and each job fires on its own schedule reading the upstream job's last output.
 

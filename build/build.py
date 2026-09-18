@@ -131,7 +131,7 @@ while i < len(lines):
     if img:
         flush(); close_list()
         alt, src = img.group(1), img.group(2)
-        cls = "hero" if "hero" in src else "sec-banner"
+        cls = "hero" if "hero" in src else ("figure-img" if re.search(r"/d\d\d\.", src) else "sec-banner")
         out.append(f"<div class='{cls}'><img src='{datauri(src)}' alt='{esc(alt)}'></div>")
         i += 1; continue
 

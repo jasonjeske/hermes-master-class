@@ -66,57 +66,7 @@ A chatbot predicts the next token. Hermes runs a process: it assembles a layered
 
 Twelve articles describe nine subsystems. They fit together like this.
 
-**The whole Hermes system, one graph**
-
-```mermaid
-flowchart TB
-  subgraph INPUT["Ways in"]
-    CLI["CLI / TUI / Desktop"]
-    GW["Messaging gateways · 20+ platforms"]
-    CRON["Cron scheduler · ticks every 60s"]
-    API["OpenAI-compatible · API server"]
-  end
-
-  subgraph CORE["The agent loop, AIAgent in run_agent.py"]
-    ASM["1. Prompt assembly · stable / context / volatile"]
-    RES["2. Provider resolution · 18+ providers"]
-    CMP["3. Preflight compression · at 50% of window"]
-    CALL["4. API call · interruptible, with fallback"]
-    PARSE["5. Response parsing"]
-  end
-
-  subgraph ACT["Acting on the world"]
-    REG["Tool registry · 70+ tools / 28 toolsets"]
-    SUB["Subagents · own context + budget"]
-    BR["Browser + computer use"]
-  end
-
-  subgraph LEARN["What persists"]
-    MEM["MEMORY.md + USER.md · ~1,300 tokens"]
-    SK["Skills library · progressive disclosure"]
-    SESS["Sessions · SQLite + FTS5"]
-    KB["Kanban board · SQLite"]
-  end
-
-  CLI --> ASM
-  GW --> ASM
-  CRON --> ASM
-  API --> ASM
-  ASM --> RES --> CMP --> CALL --> PARSE
-  PARSE -->|"text"| OUT["Response delivered"]
-  PARSE -->|"tool_call"| REG
-  REG --> SUB
-  REG --> BR
-  REG -->|"results appended"| CALL
-  MEM -.->|"volatile tier"| ASM
-  SK -.->|"stable tier index"| ASM
-  SESS -.->|"history"| ASM
-  KB -.->|"open work"| ASM
-  OUT --> SESS
-  OUT --> REVIEW["Background review · forked agent"]
-  REVIEW -.->|"proposes"| MEM
-  REVIEW -.->|"proposes"| SK
-```
+![The whole Hermes system, one graph](../assets/art/d01.webp)
 
 Read it as three rings. The **middle ring is the loop**, and it is the only part that is always running. The **top ring is every way a turn can start**, and the loop cannot tell them apart. The **bottom ring is what survives the turn**, which is the entire reason the system compounds instead of merely responding.
 
@@ -178,31 +128,7 @@ That last detail is worth pausing on. **Three wire protocols, one internal repre
 
 ### The five stages, in order, every time
 
-**Stages 1 to 3 · preparing the call**
-
-```mermaid
-flowchart LR
-  M["User message arrives"] --> A["1 · PROMPT ASSEMBLY · 10+ layers into 3 ordered tiers"]
-  A --> B["2 · PROVIDER RESOLUTION · endpoint, key, mode · 18+ providers"]
-  B --> C{"3 · PREFLIGHT · context over 50%?"}
-  C -->|"no"| READY["Ready to send"]
-  C -->|"yes"| C2["Compress · summarize the middle · keep last 20 · new lineage ID"]
-  C2 --> READY
-```
-
-**Stages 4 and 5 · the call, and the loop that repeats**
-
-```mermaid
-flowchart LR
-  READY["Assembled context"] --> D["4 · API CALL · background thread · interrupt watcher"]
-  D --> E{"429 or 5xx?"}
-  E -->|"yes"| F["Next fallback provider"] --> D
-  E -->|"no"| G{"5 · RESPONSE · text or tool_call?"}
-  G -->|"text"| H["Persist to the session store · done"]
-  G -->|"tool_call"| I["Dispatch through the registry"]
-  I --> J["Results appended as tool-role messages"]
-  J -->|"loop back to the API call"| D
-```
+![The five stages of one turn through the agent loop](../assets/art/d02.webp)
 
 **1. Prompt assembly.** The system builds your context from ten-plus layers. SOUL.md for identity. Skills for procedural knowledge. Memory and user profile snapshots. Context files from your project directory. Platform hints for where you are chatting from. All assembled into three ordered tiers: stable, context, volatile.
 
@@ -240,28 +166,7 @@ Multiple tool calls from a single model response run **concurrently** via a thre
 
 The reason Hermes gets better over time is not magic, it is structural. The system prompt is built as three ordered tiers.
 
-**The three prompt tiers and what invalidates each**
-
-```mermaid
-flowchart TB
-  subgraph S["STABLE · cached by the provider"]
-    A1["SOUL.md identity"]
-    A2["Tool guidance"]
-    A3["Skills INDEX"]
-    A4["Environment + platform hints"]
-  end
-  subgraph C["CONTEXT · one file only, by priority"]
-    B1[".hermes.md  1st"] --> B2["AGENTS.md  2nd"] --> B3["CLAUDE.md  3rd"]
-  end
-  subgraph V["VOLATILE · frozen for the session"]
-    C1["Memory snapshot"]
-    C2["User profile snapshot"]
-    C3["Timestamp, session, model"]
-  end
-  S --> C --> V --> P["Assembled system prompt"]
-  S -.->|"never changes mid-conversation"| CACHE["Prefix stays cacheable"]
-  V -.->|"written mid-session · visible NEXT session"| NEXT["Rebuild on new session, compression or invalidation"]
-```
+![The three prompt tiers and what invalidates each](../assets/art/d04.webp)
 
 | Tier | Contents | Changes when |
 |---|---|---|
@@ -354,27 +259,7 @@ Every conversation with Hermes is saved as a session, stored in a SQLite databas
 
 This is the infrastructure that makes the learning loop work. Without it, every conversation starts from zero and the agent has no way to build on previous work.
 
-**Where sessions survive, and where they do not**
-
-```mermaid
-flowchart LR
-  subgraph OK["Survives a restart"]
-    L["Local desktop · ~/.hermes/state.db in your home"]
-    D["Docker WITH volume mount · ~/.hermes → /opt/data"]
-  end
-  subgraph RISK["Conditional"]
-    S["Serverless (Daytona / Modal) · hibernates with the environment"]
-  end
-  subgraph FAIL["Silently loses everything"]
-    DN["Docker WITHOUT volume mount · fresh empty store every start"]
-  end
-  L --> T{"The test · start a chat, stop the agent, restart, run hermes -c"}
-  D --> T
-  S --> T
-  DN --> T
-  T -->|"conversation returns"| PASS["Foundation is sound"]
-  T -->|"starts fresh"| STOP["Fix storage before building anything"]
-```
+![Where sessions survive, and where they do not](../assets/art/d05.webp)
 
 On serverless backends the environment hibernates when idle and the agent's state hibernates with it. Sessions resume when it wakes, but the agent is not reachable during hibernation. That is fine for scheduled cron work. It is not fine if you want to ping the agent from Telegram and get an answer in real time.
 
@@ -449,15 +334,7 @@ When the agent solves a novel problem in a multi-step workflow, five or more too
 
 Skills use **progressive disclosure** to minimize token overhead, and this is the mechanism that lets the library scale.
 
-**Progressive disclosure, three levels**
-
-```mermaid
-flowchart LR
-  A["Session start · skill INDEX only · ~3,000 tokens"]
-  A -->|"request matches a description"| B["skill_view(name) · full SKILL.md body loaded"]
-  B -->|"procedure references a file"| C["skill_view(name, path) · templates, scripts, reference docs"]
-  A -.->|"most skills, most sessions"| D["Never loaded · zero cost beyond the index line"]
-```
+![Progressive disclosure, three levels](../assets/art/d06.webp)
 
 Multiple skills can be stacked in a single command. Running `/github-pr-workflow /test-driven-development fix issue #123` loads both skills and the agent follows both sets of instructions for the same task. For workflows you repeat constantly, skill bundles group several skills under a single slash command.
 
@@ -490,18 +367,7 @@ This is the part that makes the learning loop feel like magic. You correct the a
 
 The curator is the garbage collector for skills. It runs on a ticker, every 7 days by default, when the agent has been idle for at least 2 hours.
 
-**Skill lifecycle under the curator**
-
-```mermaid
-flowchart LR
-  N["New skill · active"] -->|"unused 30 days"| S["stale"]
-  S -->|"unused 90 days"| A["archived · ~/.hermes/skills/.archive/"]
-  A -->|"hermes curator restore name"| N
-  N -->|"hermes curator pin name"| P["PINNED · immune to every automated transition"]
-  P -.->|"patches and edits still apply"| P
-  N -.->|"optional LLM phase, opt-in"| C["consolidate · merge overlaps, propose umbrella skills, patch drift"]
-  C --> N
-```
+![Skill lifecycle under the curator](../assets/art/d07.webp)
 
 The deterministic phase handles the lifecycle above. **Nothing is ever deleted**, archival is recoverable with `hermes curator restore <name>`.
 
@@ -555,20 +421,7 @@ version: 1.0.0
 
 The **body** holds the procedure. The docs recommend four sections, and the four are not arbitrary, each one answers a question the agent would otherwise have to guess.
 
-**How the agent reads a skill, section by section**
-
-```mermaid
-flowchart LR
-  F["FRONTMATTER · name, description, version"] -->|"the INDEX carries the description"| M{"Request matches the description?"}
-  M -->|"no"| SKIP["Never loaded · costs one index line"]
-  M -->|"yes"| W["WHEN TO USE · confirms the trigger"]
-  W --> P["PROCEDURE · numbered concrete actions"]
-  P --> PIT["PITFALLS · checked BEFORE acting"]
-  PIT --> EX["Execute the steps"]
-  EX --> V["VERIFICATION · did it actually work?"]
-  V -->|"pass"| DONE["Report success"]
-  V -->|"fail"| P
-```
+![How the agent reads a skill, section by section](../assets/art/d08.webp)
 
 | Section | The question it answers | What a weak version looks like |
 |---|---|---|
@@ -718,17 +571,7 @@ Every tool can provide a `check_fn`, a callable returning True when the tool can
 
 When the agent builds its schema list for the model, it runs each `check_fn` and **excludes unavailable tools from the schema entirely.** The model never sees tool definitions it cannot use.
 
-**Why a tool can silently vanish**
-
-```mermaid
-flowchart LR
-  T["Tool registered · at import time"] --> C{"check_fn() · at schema build"}
-  C -->|"true"| IN["Included in the schema · model can call it"]
-  C -->|"false"| OUT["Excluded from the schema"]
-  OUT --> M["Model never learns · the tool exists"]
-  M --> R["No error. No alert. · The capability is simply gone"]
-  K["API key expires · credit runs out · backend unreachable"] --> C
-```
+![Why a tool can silently vanish](../assets/art/d09.webp)
 
 This cuts both ways and it is worth holding both halves. The good half: **your capability surface changes with your configuration and no code changes.** Install an MCP server, restart, and the agent gains tools. The bad half is Part 12's warning in advance: a credential that expires takes a tool with it, silently, and the agent does not know what it cannot do.
 
@@ -775,32 +618,9 @@ Every part so far has described a reactive system. You send a message, the agent
 
 The cron system lives inside the gateway daemon. Every 60 seconds the scheduler ticks.
 
-**The tick · which jobs fire**
+![The tick - which jobs fire](../assets/art/d10.webp)
 
-```mermaid
-flowchart LR
-  T["Tick · every 60s"] --> L{"Acquire ~/.hermes/cron/.tick.lock"}
-  L -->|"held by a slow tick"| W["Wait · no double-run"]
-  L -->|"acquired"| J["Load jobs from ~/.hermes/cron/jobs.json"]
-  J --> D{"next_run_at due?"}
-  D -->|"no"| SKIP["Skip"]
-  D -->|"yes"| RUN["Run the job"]
-```
-
-**Running a due job · two modes**
-
-```mermaid
-flowchart LR
-  RUN["A due job"] --> MODE{"no-agent mode?"}
-  MODE -->|"yes"| SH["Run the script · deliver stdout verbatim · ZERO tokens"]
-  MODE -->|"no"| F["Fresh AIAgent session · no history · no memory"]
-  F --> SK["Inject attached skills as context"]
-  SK --> P["Run the prompt to completion"]
-  P --> OUT["Deliver to the configured target(s)"]
-  SH --> OUT
-  OUT --> SAVE["Save to ~/.hermes/cron/output/{job_id}/{timestamp}.md"]
-  SAVE --> UPD["Update last_run and next_run_at · atomic write"]
-```
+![Running a due job - two modes](../assets/art/d11.webp)
 
 The file lock at `~/.hermes/cron/.tick.lock` prevents overlapping ticks from double-running the same batch. If a tick takes longer than 60 seconds, the next one waits. Atomic file writes prevent corrupted job data from a crashed write.
 
@@ -879,16 +699,7 @@ The agent can set these up for you. Describe the watchdog in chat, "Ping me on T
 
 Cron jobs run in isolated sessions with no memory of previous runs. But sometimes one job's output is exactly what the next needs.
 
-**A three-stage cron pipeline**
-
-```mermaid
-flowchart LR
-  A["Job A · collect · every 1h"] -->|"context_from: A · last output prepended"| B["Job B · filter and rank · every 6h"]
-  B -->|"context_from: B"| C["Job C · format and deliver · daily 08:00"]
-  C --> D["Telegram + Discord"]
-  PRE["Pre-check script"] -.->|"emits {wakeAgent: false}"| SKIP["Agent turn skipped entirely · nothing paid"]
-  PRE -.->|"emits {wakeAgent: true}"| A
-```
+![A three-stage cron pipeline](../assets/art/d12.webp)
 
 The `context_from` parameter wires the connection automatically: Job B gets Job A's most recent output prepended as context at runtime. The chain can be any length, and each job fires on its own schedule reading the upstream job's last output.
 
@@ -926,22 +737,7 @@ The gateway is a single background process. It runs alongside the agent, connect
 
 ### How the gateway works
 
-**A message's path through the gateway**
-
-```mermaid
-flowchart LR
-  TG["Telegram"] --> AD
-  DC["Discord"] --> AD
-  SL["Slack"] --> AD
-  IM["iMessage / SMS / Signal / · WhatsApp / Matrix / Teams / email"] --> AD
-  AD["Platform adapter · converts to a standardized message event"] --> R["Gateway router · looks up or creates the session"]
-  R --> AG["Fresh AIAgent instance · gets message + session history"]
-  AG --> RESP["Response"]
-  RESP --> AD2["Same adapter, back out"]
-  CR["Cron scheduler · also lives here, ticks every 60s"] --> AD2
-  STORE[("Shared session store")] <--> R
-  CLI2["CLI session"] <--> STORE
-```
+![A message's path through the gateway](../assets/art/d13.webp)
 
 Sessions are portable because the session store is shared. A session started on Telegram has the same history and memory as one started in the CLI or on Discord. You can start a research task on your phone, walk to your desk, and see the same conversation in the terminal.
 
@@ -988,16 +784,7 @@ Tiers are configured independently per platform, and **DM admin does not imply g
 
 Every platform adapter is wrapped in a circuit breaker. Repeated retryable failures, network blips, rate-limit replies, 5xx responses, websocket disconnects, trip the breaker.
 
-**Circuit breaker behavior**
-
-```mermaid
-flowchart LR
-  F["Repeated retryable failures · on one platform"] --> TRIP["Breaker trips"]
-  TRIP --> P["That adapter auto-pauses"]
-  TRIP --> N["Operator notification to the home channel · of any STILL-LIVE platform"]
-  P --> UP["Gateway stays up. · Only the failing platform goes quiet"]
-  UP -->|"hermes gateway resume platform · or /platform resume name"| ARM["Breaker clears, adapter re-arms"]
-```
+![Circuit breaker behavior](../assets/art/d14.webp)
 
 The `/platform` slash command lets you inspect and steer individual adapters without restarting the gateway: list all, pause one, resume one. **Pausing keeps the adapter loaded and its background loops alive** so incoming messages are silently dropped but the connection stays open, which makes resume instant.
 
@@ -1035,19 +822,7 @@ A single task creates one child. A batch creates up to three by default, running
 
 ### When to delegate, and when not to
 
-**Delegate, or script it?**
-
-```mermaid
-flowchart TB
-  T["A task arrives"] --> Q{"Does it need · reasoning and judgment?"}
-  Q -->|"no · deterministic steps"| EC["execute_code · a Python script · cheaper, no LLM loop"]
-  Q -->|"yes"| Q2{"Is it parallelizable · or context-heavy?"}
-  Q2 -->|"no"| INLINE["Just do it in the parent session"]
-  Q2 -->|"yes"| DEL["delegate_task · isolated context, own budget · only the summary returns"]
-  DEL --> P1["Parallel research · 3 topics at once"]
-  DEL --> P2["Code review and fix · parent never sees the debugging"]
-  DEL --> P3["Multi-file refactor · 20 files of intermediate context stays out"]
-```
+![Delegate, or script it?](../assets/art/d15.webp)
 
 The three patterns the author calls out, with what each one actually buys:
 
@@ -1138,16 +913,7 @@ The browser toolset turns Hermes into a real web browser: navigate, click, type,
 
 **Hybrid routing is the feature worth calling out.** With a cloud provider configured, public URLs go through the cloud browser while `localhost`, `192.168.x.x` and other private addresses automatically route to a local Chromium sidecar.
 
-**Hybrid routing keeps your dev server private**
-
-```mermaid
-flowchart LR
-  A["Agent requests a URL"] --> R{"Private address? · localhost · 192.168.x.x · 10.x"}
-  R -->|"yes"| L["Local Chromium sidecar · never touches a cloud network"]
-  R -->|"no"| C["Cloud browser · proxies, CAPTCHA solving, anti-detection"]
-  L --> S["Both in one conversation · no provider switching"]
-  C --> S
-```
+![Hybrid routing keeps your dev server private](../assets/art/d16.webp)
 
 The payoff: the agent can screenshot `http://localhost:3000` and scrape `https://github.com` in the same conversation, and your local dev server never leaves your machine.
 
@@ -1174,18 +940,7 @@ Computer use works with any tool-capable model, Claude, GPT, Gemini or an open m
 | Permissions | None platform-specific | Platform accessibility grants required |
 | Use it when | The task is web-only | The app has no web interface |
 
-**Browser toolset or computer use?**
-
-```mermaid
-flowchart TB
-  T["A task needs a real interface"] --> Q{"Does it live · in a web page?"}
-  Q -->|"yes"| B["BROWSER TOOLSET · isolated Chromium · faster, cheaper"]
-  Q -->|"no, native app or OS dialog"| Q2{"Is the action · destructive?"}
-  Q2 -->|"yes"| BLOCK["Hard-blocked: empty trash · log out · lock screen · force delete"]
-  Q2 -->|"no"| CU["COMPUTER USE · background · clicks by element index"]
-  B --> SAFE["Cannot reach outside the browser session"]
-  CU --> APPR["Every action surfaces for approval"]
-```
+![Browser toolset or computer use?](../assets/art/d17.webp)
 
 The rule is simple: **for web-only tasks use the browser toolset**, it is faster, cheaper, isolated and needs no platform permissions. For native desktop tasks use computer use.
 
@@ -1253,19 +1008,7 @@ Each task has an **assignee field that maps to a Hermes profile**. When a profil
 
 ### Read, claim, execute
 
-**Read, claim, execute, and how profiles stay out of each other's way**
-
-```mermaid
-flowchart TB
-  B[("Kanban board · SQLite · ~/.hermes/kanban/")]
-  B -->|"1 READ · query by state, tag, assignee"| A["Agent sees structured task data · with all the context it needs"]
-  A -->|"2 CLAIM · assign self, todo → in_progress"| C["Other profiles see it is claimed and skip it"]
-  C -->|"3 EXECUTE · any tool in its toolset"| D["Work happens"]
-  D -->|"move to review or done + lifecycle note"| B
-  PA["Profile A · orchestrator · creates and assigns"] --> B
-  PB["Profile B · worker · claims todo, executes"] --> B
-  PC["Profile C · reviewer · validates or rejects"] --> B
-```
+![Read, claim, execute, and how profiles stay out of each other's way](../assets/art/d18.webp)
 
 **Read.** The agent queries the board for tasks in a relevant state. An orchestrator might query all `todo` tasks tagged "research"; a worker might query `in_progress` tasks assigned to itself.
 
@@ -1385,18 +1128,7 @@ The dashboard is **optional**. Everything it does can be done through the CLI. F
 
 Hermes exposes an **OpenAI-compatible HTTP endpoint**. Any frontend that speaks the OpenAI format can drive it: Open WebUI, LobeChat, LibreChat and similar.
 
-**Four surfaces, one agent loop**
-
-```mermaid
-flowchart LR
-  A["CLI / TUI"] --> L
-  B["Messaging gateway"] --> L
-  C["Web dashboard"] --> L
-  D["OpenAI-compatible · API server"] --> L
-  L["The SAME agent loop · same prompt, tools, memory, skills, sessions"]
-  L --> S[("Shared session store")]
-  D -.->|"handles"| E["auth, rate limiting, session management · one session per user"]
-```
+![Four surfaces, one agent loop](../assets/art/d19.webp)
 
 The only difference between surfaces is the transport. The API server routes requests through the active profile's agent loop with the same prompt assembly, tool dispatch and session persistence the CLI uses. That is what makes a custom frontend or a team-shared interface cheap to build: you are not reimplementing the agent, only changing how messages arrive.
 
@@ -1428,25 +1160,7 @@ Hermes is the most capable open-source agent the author has used. It is also a c
 
 Every model has a context window and Hermes runs inside it.
 
-**Context pressure, and the two thresholds that fire**
-
-```mermaid
-flowchart LR
-  subgraph W["One context window, everything competes"]
-    A["System prompt"]
-    B["Memory snapshot"]
-    C["Skills index"]
-    D["Conversation history"]
-    E["Tool call results"]
-  end
-  W --> P{"Fill level"}
-  P -->|"under 50%"| OK["Normal operation"]
-  P -->|"50% · preflight"| CMP["Compress BEFORE the call · keep last 20 · new lineage ID"]
-  P -->|"85% · gateway"| CMP
-  CMP --> LOSS["Nuance is gone. · Automatic, invisible, destructive."]
-  LOSS --> RULE["Past ~30 tool calls, delegate or split"]
-  E -.->|"one research task = 9 call-and-result pairs"| P
-```
+![Context pressure, and the two thresholds that fire](../assets/art/d20.webp)
 
 The system prompt, memory snapshot, skills index, conversation history and tool call results all compete for the same limited space.
 
@@ -1514,18 +1228,7 @@ Not every feature is worth your time on day one. Some are genuinely useful for a
 
 Hermes is an agent with a tool surface. It is not the right tool for every task, and knowing the boundary is part of using it well.
 
-**Should this task go to Hermes at all?**
-
-```mermaid
-flowchart TB
-  T["A task arrives"] --> Q1{"Needs TOOLS? web, terminal, files, browser"}
-  Q1 -->|"no"| RAW["Use a raw LLM call · the loop is pure overhead"]
-  Q1 -->|"yes"| Q2{"Byte-identical output every run?"}
-  Q2 -->|"yes"| SCRIPT["Script the tools directly · the loop is non-deterministic"]
-  Q2 -->|"no"| Q3{"Latency over capability?"}
-  Q3 -->|"yes"| API["Call the API directly · tool calls add round trips"]
-  Q3 -->|"no"| HERMES["Use Hermes · this is what the loop is for"]
-```
+![Should this task go to Hermes at all?](../assets/art/d21.webp)
 
 | Do not use it for | Because | Use instead |
 |---|---|---|
@@ -1709,27 +1412,7 @@ They do work. They are just not the place for adjectives.
 
 ### Three files, three different jobs
 
-**What belongs in which file**
-
-```mermaid
-flowchart LR
-  subgraph STABLE["STABLE tier · cached · never changes mid-conversation"]
-    S["SOUL.md · who the agent is · how it behaves · what it never does"]
-    SK["Skills index · how to do specific jobs"]
-  end
-  subgraph CONTEXT["CONTEXT tier · one per working directory"]
-    A[".hermes.md / AGENTS.md · how THIS project works"]
-  end
-  subgraph VOLATILE["VOLATILE tier · frozen per session · written between them"]
-    U["USER.md · stable facts about YOU"]
-    M["MEMORY.md · what the agent learned · env facts, conventions"]
-  end
-  STABLE --> P["Assembled prompt"]
-  CONTEXT --> P
-  VOLATILE --> P
-  W["Background review after every turn"] -.->|"proposes writes"| U
-  W -.->|"proposes writes"| M
-```
+![What belongs in which file](../assets/art/d22.webp)
 
 | File | Answers | Written by | Budget |
 |---|---|---|---|
@@ -1864,20 +1547,7 @@ Part 4 covers the anatomy of a skill and why progressive disclosure lets a libra
 
 ### Skill, bundle, or plugin
 
-**Choosing the right extension point**
-
-```mermaid
-flowchart TB
-  N["I want the agent to do something new"] --> Q1{"Is it a PROCEDURE the agent could follow with existing tools?"}
-  Q1 -->|"yes"| SK["Write a SKILL · a markdown file · no code, no install"]
-  Q1 -->|"no · it needs a NEW capability"| Q2{"Does an MCP server already expose it?"}
-  Q2 -->|"yes"| MCP["Connect the MCP server · tools register at runtime"]
-  Q2 -->|"no"| Q3{"Do you need it in the tool registry with its own check_fn?"}
-  Q3 -->|"yes"| PL["Write a PLUGIN · real code · last resort"]
-  Q3 -->|"no"| SK
-  SK --> B{"Do you run several skills together every single time?"}
-  B -->|"yes"| BUN["Add a BUNDLE · a YAML alias for the combination"]
-```
+![Choosing the right extension point](../assets/art/d23.webp)
 
 The ordering is not arbitrary. A skill costs one markdown file and one index line. A plugin costs code you now maintain against a moving project. Part 12's advice is explicit: skip custom plugin development until the built-in tools genuinely do not cover the case.
 
@@ -1983,21 +1653,7 @@ Everything up to here describes what Hermes can do. This appendix is about how t
 
 ### The pattern underneath both
 
-**The shape of a prompt that produces a working system**
-
-```mermaid
-flowchart TB
-  A["1 · PROBE THE ENVIRONMENT · what is actually installed and authenticated?"]
-  B["2 · NAME THE STRUCTURE · which files hold which kind of truth"]
-  C["3 · NAME THE WORKFLOWS · the few processes the system supports"]
-  D["4 · SET THE APPROVAL BOUNDARY · what it may do alone, what always stops"]
-  E["5 · TEST ON A BOUNDED BATCH · representative cases, including the hard ones"]
-  F["6 · AUTOMATE ONLY AFTER · propose the schedule, do not enable it"]
-  A --> B --> C --> D --> E --> F
-  A -.->|"refuses to assume Gmail, Cron, or any integration is configured"| A2["Ask only for what is genuinely missing"]
-  D -.->|"the line that keeps an unattended agent safe"| D2["Read and draft freely · never send, delete or spend"]
-  E -.->|"duplicate names, resolved items, coverage gaps"| E2["Fix routing before it runs unattended"]
-```
+![The shape of a prompt that produces a working system](../assets/art/d24.webp)
 
 Six moves, and the order matters more than the wording. Most failed agent builds skip move 1 and move 5: they assume an integration is ready, and they automate before testing on real messy input.
 
@@ -2183,4 +1839,4 @@ The author also references two companion pieces worth reading alongside the seri
 
 > 📝 **What this document added**
 >
-> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-four workflow diagrams, thirteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, and the configuration and prompt guidance in Appendices F, G and H. Nothing was invented about how Hermes behaves; where a number appears it came from the source.
+> The prose substance, and every mechanism, threshold and command above, come from the source articles. Added while compiling: twenty-three diagrams, thirteen illustrations, the consolidated constant and triage tables, the vocabulary table, the operator drills, the cross-references between parts, the 30/60/90 path in Appendix E, and the configuration and prompt guidance in Appendices F, G and H. Nothing was invented about how Hermes behaves; where a number appears it came from the source.

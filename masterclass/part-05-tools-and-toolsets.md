@@ -48,17 +48,7 @@ Every tool can provide a `check_fn`, a callable returning True when the tool can
 
 When the agent builds its schema list for the model, it runs each `check_fn` and **excludes unavailable tools from the schema entirely.** The model never sees tool definitions it cannot use.
 
-**Why a tool can silently vanish**
-
-```mermaid
-flowchart LR
-  T["Tool registered · at import time"] --> C{"check_fn() · at schema build"}
-  C -->|"true"| IN["Included in the schema · model can call it"]
-  C -->|"false"| OUT["Excluded from the schema"]
-  OUT --> M["Model never learns · the tool exists"]
-  M --> R["No error. No alert. · The capability is simply gone"]
-  K["API key expires · credit runs out · backend unreachable"] --> C
-```
+![Why a tool can silently vanish](../assets/art/d09.webp)
 
 This cuts both ways and it is worth holding both halves. The good half: **your capability surface changes with your configuration and no code changes.** Install an MCP server, restart, and the agent gains tools. The bad half is Part 12's warning in advance: a credential that expires takes a tool with it, silently, and the agent does not know what it cannot do.
 

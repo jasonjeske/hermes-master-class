@@ -10,22 +10,7 @@ The gateway is a single background process. It runs alongside the agent, connect
 
 ### How the gateway works
 
-**A message's path through the gateway**
-
-```mermaid
-flowchart LR
-  TG["Telegram"] --> AD
-  DC["Discord"] --> AD
-  SL["Slack"] --> AD
-  IM["iMessage / SMS / Signal / · WhatsApp / Matrix / Teams / email"] --> AD
-  AD["Platform adapter · converts to a standardized message event"] --> R["Gateway router · looks up or creates the session"]
-  R --> AG["Fresh AIAgent instance · gets message + session history"]
-  AG --> RESP["Response"]
-  RESP --> AD2["Same adapter, back out"]
-  CR["Cron scheduler · also lives here, ticks every 60s"] --> AD2
-  STORE[("Shared session store")] <--> R
-  CLI2["CLI session"] <--> STORE
-```
+![A message's path through the gateway](../assets/art/d13.webp)
 
 Sessions are portable because the session store is shared. A session started on Telegram has the same history and memory as one started in the CLI or on Discord. You can start a research task on your phone, walk to your desk, and see the same conversation in the terminal.
 
@@ -72,16 +57,7 @@ Tiers are configured independently per platform, and **DM admin does not imply g
 
 Every platform adapter is wrapped in a circuit breaker. Repeated retryable failures, network blips, rate-limit replies, 5xx responses, websocket disconnects, trip the breaker.
 
-**Circuit breaker behavior**
-
-```mermaid
-flowchart LR
-  F["Repeated retryable failures · on one platform"] --> TRIP["Breaker trips"]
-  TRIP --> P["That adapter auto-pauses"]
-  TRIP --> N["Operator notification to the home channel · of any STILL-LIVE platform"]
-  P --> UP["Gateway stays up. · Only the failing platform goes quiet"]
-  UP -->|"hermes gateway resume platform · or /platform resume name"| ARM["Breaker clears, adapter re-arms"]
-```
+![Circuit breaker behavior](../assets/art/d14.webp)
 
 The `/platform` slash command lets you inspect and steer individual adapters without restarting the gateway: list all, pause one, resume one. **Pausing keeps the adapter loaded and its background loops alive** so incoming messages are silently dropped but the connection stays open, which makes resume instant.
 

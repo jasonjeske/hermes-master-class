@@ -39,15 +39,7 @@ When the agent solves a novel problem in a multi-step workflow, five or more too
 
 Skills use **progressive disclosure** to minimize token overhead, and this is the mechanism that lets the library scale.
 
-**Progressive disclosure, three levels**
-
-```mermaid
-flowchart LR
-  A["Session start · skill INDEX only · ~3,000 tokens"]
-  A -->|"request matches a description"| B["skill_view(name) · full SKILL.md body loaded"]
-  B -->|"procedure references a file"| C["skill_view(name, path) · templates, scripts, reference docs"]
-  A -.->|"most skills, most sessions"| D["Never loaded · zero cost beyond the index line"]
-```
+![Progressive disclosure, three levels](../assets/art/d06.webp)
 
 Multiple skills can be stacked in a single command. Running `/github-pr-workflow /test-driven-development fix issue #123` loads both skills and the agent follows both sets of instructions for the same task. For workflows you repeat constantly, skill bundles group several skills under a single slash command.
 
@@ -80,18 +72,7 @@ This is the part that makes the learning loop feel like magic. You correct the a
 
 The curator is the garbage collector for skills. It runs on a ticker, every 7 days by default, when the agent has been idle for at least 2 hours.
 
-**Skill lifecycle under the curator**
-
-```mermaid
-flowchart LR
-  N["New skill · active"] -->|"unused 30 days"| S["stale"]
-  S -->|"unused 90 days"| A["archived · ~/.hermes/skills/.archive/"]
-  A -->|"hermes curator restore name"| N
-  N -->|"hermes curator pin name"| P["PINNED · immune to every automated transition"]
-  P -.->|"patches and edits still apply"| P
-  N -.->|"optional LLM phase, opt-in"| C["consolidate · merge overlaps, propose umbrella skills, patch drift"]
-  C --> N
-```
+![Skill lifecycle under the curator](../assets/art/d07.webp)
 
 The deterministic phase handles the lifecycle above. **Nothing is ever deleted**, archival is recoverable with `hermes curator restore <name>`.
 

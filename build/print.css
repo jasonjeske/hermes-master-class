@@ -87,3 +87,7 @@ tr{break-inside:avoid}
 .figure .mermaid{padding:14pt;text-align:center}
 .figure .mermaid svg{max-width:100%;height:auto}
 @page{ size:Letter; margin:15mm 14mm 17mm 14mm; }
+
+/* generated diagram plates */
+.figure-img{margin:12pt 0 14pt;border:1px solid var(--line);border-radius:5pt;overflow:hidden;line-height:0;break-inside:avoid}
+.figure-img img{width:100%;height:auto;display:block;max-width:100%}

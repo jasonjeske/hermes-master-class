@@ -22,16 +22,7 @@ The browser toolset turns Hermes into a real web browser: navigate, click, type,
 
 **Hybrid routing is the feature worth calling out.** With a cloud provider configured, public URLs go through the cloud browser while `localhost`, `192.168.x.x` and other private addresses automatically route to a local Chromium sidecar.
 
-**Hybrid routing keeps your dev server private**
-
-```mermaid
-flowchart LR
-  A["Agent requests a URL"] --> R{"Private address? · localhost · 192.168.x.x · 10.x"}
-  R -->|"yes"| L["Local Chromium sidecar · never touches a cloud network"]
-  R -->|"no"| C["Cloud browser · proxies, CAPTCHA solving, anti-detection"]
-  L --> S["Both in one conversation · no provider switching"]
-  C --> S
-```
+![Hybrid routing keeps your dev server private](../assets/art/d16.webp)
 
 The payoff: the agent can screenshot `http://localhost:3000` and scrape `https://github.com` in the same conversation, and your local dev server never leaves your machine.
 
@@ -58,18 +49,7 @@ Computer use works with any tool-capable model, Claude, GPT, Gemini or an open m
 | Permissions | None platform-specific | Platform accessibility grants required |
 | Use it when | The task is web-only | The app has no web interface |
 
-**Browser toolset or computer use?**
-
-```mermaid
-flowchart TB
-  T["A task needs a real interface"] --> Q{"Does it live · in a web page?"}
-  Q -->|"yes"| B["BROWSER TOOLSET · isolated Chromium · faster, cheaper"]
-  Q -->|"no, native app or OS dialog"| Q2{"Is the action · destructive?"}
-  Q2 -->|"yes"| BLOCK["Hard-blocked: empty trash · log out · lock screen · force delete"]
-  Q2 -->|"no"| CU["COMPUTER USE · background · clicks by element index"]
-  B --> SAFE["Cannot reach outside the browser session"]
-  CU --> APPR["Every action surfaces for approval"]
-```
+![Browser toolset or computer use?](../assets/art/d17.webp)
 
 The rule is simple: **for web-only tasks use the browser toolset**, it is faster, cheaper, isolated and needs no platform permissions. For native desktop tasks use computer use.
 
