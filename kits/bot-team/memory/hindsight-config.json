@@ -1,0 +1,23 @@
+{
+  "mode": "local_external",
+  "api_url": "http://127.0.0.1:8888",
+  "bank_id": "team-shared",
+  "bank_id_template": "",
+  "memory_mode": "hybrid",
+  "auto_retain": true,
+  "auto_recall": true,
+  "retain_async": true,
+  "retain_every_n_turns": 1,
+  "retain_tags": [
+    "<bot-name>"
+  ],
+  "recall_tags": "",
+  "recall_types": [
+    "observation"
+  ],
+  "recall_budget": "mid",
+  "recall_prefetch_method": "recall",
+  "recall_sync": false,
+  "recall_indicator": true,
+  "retain_indicator": true
+}

@@ -1,0 +1,7 @@
+name: quill
+version: 1.0.0
+description: "Writer for a Hermes bot team. Turns findings and decisions into briefs, posts, docs and messages for a named reader."
+hermes_requires: ">=0.21.0"
+author: "Hermes Agent Masterclass, Volume 3"
+license: "CC-BY-4.0"
+env_requires: []

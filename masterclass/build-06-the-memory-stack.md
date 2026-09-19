@@ -4,7 +4,7 @@
 
 ### What you are building
 
-A memory that actually works across weeks, built in four layers that each do one job. The two you already have from Build 2. One external provider chosen on purpose from the three that matter most to a personal setup: Honcho, Mem0, or Hindsight. An Obsidian vault for the structured notes you want to read yourself. And a nightly job that turns yesterday's conversations into tomorrow's context.
+A memory that actually works across weeks, built in four layers that each do one job. The two you already have from Build 2. One external provider chosen on purpose: Hindsight first, local or cloud, because it is the one that makes a memory shared across sessions, profiles and machines actually work; Mnemosyne when everything must stay on one machine with no service running; Honcho when what you want modeled is you rather than your facts. An Obsidian vault for the structured notes you want to read yourself. And a nightly job that turns yesterday's conversations into tomorrow's context.
 
 ### What the docs say
 
@@ -22,8 +22,8 @@ Checked against the Memory Providers page, the Honcho page, and the bundled Obsi
 | One provider | Eight ship as plugins. Only one is active at a time, and the built-in files stay on alongside it |
 | Picking | `hermes memory setup` is the interactive picker. `hermes memory status` shows what is active. `hermes memory off` disables the external one. Or set `memory.provider` in config.yaml by hand |
 | Honcho | Dialectic user modeling: after each turn it reasons about your preferences, habits and goals, and injects a session-scoped context. Config in `$HERMES_HOME/honcho.json`, key in `HONCHO_API_KEY`. Tools: `honcho_profile`, `honcho_search`, `honcho_context`, `honcho_reasoning`, `honcho_conclude` |
-| Mem0 | Server-side fact extraction. Three modes: Platform (API key), Self-hosted server, and Open Source with your own LLM and vector store. Config in `$HERMES_HOME/mem0.json`, secret in `MEM0_API_KEY`. Tools: `mem0_search`, `mem0_add`, `mem0_update`, `mem0_delete` |
-| Hindsight | Knowledge graph with entity resolution and a `hindsight_reflect` tool that synthesizes across memories. Cloud with an API key, or local on embedded PostgreSQL for free. Config in `$HERMES_HOME/hindsight/config.json`, key in `HINDSIGHT_API_KEY`. Tools: `hindsight_retain`, `hindsight_recall`, `hindsight_reflect` |
+| Mnemosyne | A third-party provider (MIT, mnemosyne-oss), local-first: one SQLite file with vector and full-text search, no daemon, no LLM needed to run, no telemetry. Installed into a venv of its own and exposed under `~/.hermes/plugins/mnemosyne`, then `memory.provider: mnemosyne`. Tools are prefixed `mnemosyne_`; `hermes mnemosyne stats` shows what it holds |
+| Hindsight | Knowledge graph with entity resolution and a `hindsight_reflect` tool that synthesizes across memories. Three modes: cloud with an API key, local embedded (Hermes runs the daemon for you, free, needs an LLM key or any OpenAI-compatible endpoint for extraction), or local external (a Hindsight you run yourself, one URL). Config in `$HERMES_HOME/hindsight/config.json`, key in `HINDSIGHT_API_KEY`; the bank is named by `bank_id`, and one profile connects to exactly one bank. Tools: `hindsight_retain`, `hindsight_recall`, `hindsight_reflect` |
 | Obsidian | The bundled skill at `skills/note-taking/obsidian` reads, lists, searches, creates and appends notes with the ordinary file tools. It resolves the vault from `OBSIDIAN_VAULT_PATH` in `~/.hermes/.env`, falling back to `~/Documents/Obsidian Vault`. No app needed to write; the app is how you read |
 
 ### Which provider
@@ -31,8 +31,8 @@ Checked against the Memory Providers page, the Honcho page, and the bundled Obsi
 | You want | Pick | Because |
 |---|---|---|
 | The agent to know who you are, across every session and every gateway chat, without you writing it down | Honcho | It models the user, not just facts, and its context injection is session-aware |
-| A plain durable fact store you can self-host today for nothing, and grow into a paid platform later | Mem0 | Three modes on one config file, and the OSS mode runs on your own LLM and vector store |
-| Recall that follows relationships between things, and a tool that reasons across memories | Hindsight | The graph and the reflect tool are unique among the three, and local mode is free |
+| Memory that is shared across sessions today and across profiles and machines tomorrow, with recall that follows relationships and a tool that reasons across memories | Hindsight, and set it up first | The graph, the reflect tool and the bank model are unique among the three; local embedded mode is free, and the same bank serves a whole team later |
+| Everything on one machine, nothing running in the background, and the fastest possible recall | Mnemosyne | One SQLite file, local embeddings, no service; the trade is no reflect and a smaller project behind it |
 
 ### Honcho
 
@@ -89,41 +89,42 @@ Set up Honcho as my memory provider. Do these in order.
    show me what Honcho now believes about me.
 ```
 
-### Mem0
+### Mnemosyne
 
-*`mem0.sh`*
+*`mnemosyne.sh`*
 
 ```bash
-hermes memory setup                 # pick "mem0", then Platform, Self-hosted server, or Open Source
-# Platform, by hand:
-hermes config set memory.provider mem0
-echo 'MEM0_API_KEY=your-key' >> ~/.hermes/.env
-# Open Source, no Mem0 account, your own LLM and vector store:
-hermes memory setup mem0 --mode oss --oss-llm openai --oss-llm-key sk-... --oss-vector qdrant
-# Self-hosted server:
-hermes memory setup mem0 --mode selfhosted --host http://localhost:8888 --api-key your-admin-key
-hermes memory status
+# A venv of its own: hermes update rebuilds the managed venv and wipes extra packages.
+python3 -m venv ~/.hermes/.mnemosyne/venv
+~/.hermes/.mnemosyne/venv/bin/python -m pip install --upgrade "mnemosyne-memory[embeddings]" mnemosyne-hermes
+~/.hermes/.mnemosyne/venv/bin/mnemosyne-hermes install --mode wrapper --force --python ~/.hermes/.mnemosyne/venv/bin/python
+hermes memory setup                 # pick "mnemosyne", local; set the remember scope to global, not per session
+hermes memory status                # provider mnemosyne, plugin installed, status available
+hermes mnemosyne stats 2>/dev/null || true   # the plugin's own CLI command as shown in a recorded walkthrough; optional
 ```
 
-*`prompt-06-mem0.md`*
+*`prompt-06-mnemosyne.md`*
 
 ```markdown
-Set up Mem0 as my memory provider in <platform | self-hosted | oss> mode.
-Do these in order.
+Set up Mnemosyne as my memory provider, fully local. Do these in order.
 
-1. Read the Mem0 section of
-   https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
-   and tell me the exact setup command for the mode I named and which
-   file holds its settings.
+1. Read the Hermes section of https://github.com/mnemosyne-oss/mnemosyne
+   and tell me in five lines what it stores, where the database lives,
+   and why it must be installed in a venv of its own rather than the
+   Hermes-managed one.
 2. Run hermes memory status and tell me what is active now.
-3. Show me the command you will run and the mem0.json you expect it to
-   write. For oss mode, tell me which LLM and vector store you will use
-   and confirm both are reachable before anything is written. Only the
-   secret goes in .env; I will add it myself.
-4. After I say go, run it, then run hermes memory status and show me the
-   four mem0 tools in /tools.
-5. Store one fact about me with mem0_add, start a new session with /new,
-   and recall it with mem0_search to prove the loop works.
+3. Show me the exact commands you will run: the side venv under
+   ~/.hermes/.mnemosyne, the pip install with local embeddings, the
+   wrapper install, then hermes memory setup. Tell me which wizard
+   answer sets the remember scope to global and why that one matters.
+   Do not run anything yet. If my terminal backend is Docker, tell me,
+   because then I run these on the host myself.
+4. After I say go, run them, then show me hermes memory status and the
+   mnemosyne_ tools in /tools, and hermes mnemosyne stats.
+5. Tell me three facts about how I work, start a new session with /new,
+   ask "who am I?", and show me the recall. Then propose whether to turn
+   off the built-in MEMORY.md and USER.md injection for this profile in
+   config.yaml, and what I would lose if I did.
 ```
 
 ### Hindsight
@@ -131,12 +132,13 @@ Do these in order.
 *`hindsight.sh`*
 
 ```bash
-hermes memory setup                 # pick "hindsight", then cloud or local
+hermes memory setup                 # pick "hindsight", then cloud, local embedded, or local external
 # cloud, by hand:
 hermes config set memory.provider hindsight
 echo 'HINDSIGHT_API_KEY=your-key' >> ~/.hermes/.env
-# local mode has a UI:
+# local embedded has a UI:
 hindsight-embed -p hermes ui start
+# the bank name, and the tags that say which profile wrote a memory, live in the config file below
 hermes memory status
 ```
 
@@ -144,10 +146,12 @@ hermes memory status
 
 ```json
 {
-  "mode": "local",
+  "mode": "local_embedded",
   "bank_id": "hermes",
+  "retain_tags": ["default"],
   "memory_mode": "hybrid",
   "recall_budget": "mid",
+  "recall_types": ["observation"],
   "auto_retain": true,
   "auto_recall": true
 }
@@ -156,8 +160,8 @@ hermes memory status
 *`prompt-06-hindsight.md`*
 
 ```markdown
-Set up Hindsight as my memory provider in <cloud | local> mode. Do these
-in order.
+Set up Hindsight as my memory provider in <cloud | local embedded | local external>
+mode. This is the provider to get right; the others are optional. Do these in order.
 
 1. Read the Hindsight section of
    https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers
@@ -165,8 +169,10 @@ in order.
    memory_mode and recall_budget control.
 2. Run hermes memory status and tell me what is active now.
 3. Show me the hindsight/config.json you propose: mode as I named,
-   memory_mode hybrid, recall_budget mid, auto_retain and auto_recall on.
-   Do not write it. For cloud mode, I add the key to .env myself.
+   bank_id hermes, retain_tags with this profile's name, memory_mode
+   hybrid, recall_budget mid, auto_retain and auto_recall on. Do not
+   write it. For cloud mode, I add the key to .env myself. For local
+   embedded, tell me which LLM key or local endpoint extraction will use.
 4. After I say go, run hermes memory setup or set memory.provider
    hindsight, confirm the client installed, then show me the three
    hindsight tools in /tools.
@@ -206,7 +212,7 @@ This job is a community pattern, described publicly by an operator running dozen
 *`nightly-consolidation.sh`*
 
 ```bash
-hermes cron create "every 1d at 03:00" \
+hermes cron create "every day at 03:00" \
   "You are running unattended with no chat history. Use session_search to read every session from the last 24 hours. Extract: decisions made, projects touched, bugs chased and their fixes, people mentioned, and mistakes that must not repeat. Then: (1) update MEMORY.md with the memory tool, target memory, adding only durable facts and merging or replacing entries so it stays under its limit; (2) update USER.md, target user, only if you learned a new stable preference; (3) using the obsidian skill, write a note at Agent/Daily/<today>.md in the vault with those five sections and wikilinks to any project notes that exist. Reply with a five-line summary of what changed, or with only [SILENT] if nothing durable happened." \
   --skill obsidian \
   --name "nightly-consolidation"
@@ -215,7 +221,7 @@ hermes cron create "every 1d at 03:00" \
 ### Verify
 
 - [ ] hermes memory status names the provider you chose and nothing else
-- [ ] /tools lists that provider's tools (honcho_*, mem0_*, or hindsight_*)
+- [ ] /tools lists that provider's tools (hindsight_*, mnemosyne_*, or honcho_*)
 - [ ] A fact stored in one session is recalled in a fresh one after /new
 - [ ] The Obsidian folder shows the notes, with links that resolve in the app
 - [ ] hermes cron list shows nightly-consolidation, and hermes cron run <id> produces a summary or [SILENT]

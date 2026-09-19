@@ -1,0 +1,83 @@
+# ORG.yaml: the company as bots. A planning file the chief of staff reads; the install stays the truth.
+# Keep it in step with `hermes profile list` and each bot's Edit Profile toolsets. The prompts in
+# Volume 4, Build 2 check the two against each other.
+
+company: <name>
+charter: COMPANY.md
+policies: POLICIES.md
+one_number: "<metric>: <value> (<date>)"
+
+human_gates:
+  - money_out
+  - publish
+  - message_outside
+  - change_roster
+  - delete
+  - sign
+
+bots:
+  - name: atlas
+    title: Chief of staff
+    owns: [planning, routing, standup, escalation]
+    reports_to: human
+    model: "<frontier model>"
+    effort: high
+    toolsets: [kanban, memory, file, session_search]   # no terminal, no code execution; file is the planner's notebook
+    gates: [change_roster]
+    routines: [standup, weekly-review, dreaming]
+
+  - name: forge
+    title: Engineer
+    owns: [implementation, tests, pull requests]
+    reports_to: atlas
+    model: "<inexpensive coding model>"
+    effort: medium
+    toolsets: [terminal, file, code_execution, memory]
+    gates: [delete]                          # pushes and deploys go through sentinel and the human
+    routines: []
+
+  - name: scout
+    title: Researcher
+    owns: [research, sources, competitor scans]
+    reports_to: atlas
+    model: "<mid model>"
+    effort: medium
+    toolsets: [web, browser, file, memory]
+    gates: [money_out]                       # paid sources
+    routines: [source-watch]
+
+  - name: quill
+    title: Writer
+    owns: [scripts, posts, docs, client messages as drafts]
+    reports_to: atlas
+    model: "<mid model>"
+    effort: medium
+    toolsets: [file, memory, skills]
+    gates: [publish, message_outside]
+    routines: []
+
+  - name: sentinel
+    title: Reviewer
+    owns: [review, verification, the last check]
+    reports_to: atlas
+    model: "<frontier or strong mid model>"
+    effort: high
+    toolsets: [terminal, file, web, memory]
+    gates: []
+    routines: []
+
+  - name: ops
+    title: Operator
+    owns: [briefs, sweeps, health, backups, weekly numbers, the ledger]
+    reports_to: human
+    model: "<inexpensive model>"
+    effort: low
+    toolsets: [terminal, file, memory, session_search, cronjob]
+    gates: [money_out, message_outside]
+    routines: [morning-brief, nightly-backup, weekly-numbers, board-sweep, sunday-numbers, month-end, health-4h, life-brief, sunday-money]
+
+production_lines:
+  - name: <channel or product>
+    owner: atlas
+    steps: [research:scout, draft:quill, build:forge, review:sentinel, publish:human]
+    cadence: weekly

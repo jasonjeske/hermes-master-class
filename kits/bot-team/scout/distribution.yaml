@@ -1,0 +1,7 @@
+name: scout
+version: 1.0.0
+description: "Researcher for a Hermes bot team. Reads source code and external docs, verifies claims against three sources, returns cited findings."
+hermes_requires: ">=0.21.0"
+author: "Hermes Agent Masterclass, Volume 3"
+license: "CC-BY-4.0"
+env_requires: []

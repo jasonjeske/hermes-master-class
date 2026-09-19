@@ -1,0 +1,10 @@
+name: ledger
+version: 1.0.0
+description: "A personal money ledger: the agent records entries by tool, the desktop shows the month."
+manifest_version: 2
+api_version: 1
+license: MIT
+tags: [finance, personal, desktop]
+provides_tools:
+  - ledger_add
+  - ledger_report

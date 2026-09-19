@@ -1,0 +1,7 @@
+name: atlas
+version: 1.0.0
+description: "Chief of staff for a Hermes bot team. Plans work, decides shared choices once, routes cards and messages to the right teammate, escalates real decisions to the human. Never implements."
+hermes_requires: ">=0.21.0"
+author: "Hermes Agent Masterclass, Volume 3"
+license: "CC-BY-4.0"
+env_requires: []

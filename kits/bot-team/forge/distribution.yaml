@@ -1,0 +1,7 @@
+name: forge
+version: 1.0.0
+description: "Engineer for a Hermes bot team. Implements well-specified changes in a repository, runs the tests, reports what changed and what was verified."
+hermes_requires: ">=0.21.0"
+author: "Hermes Agent Masterclass, Volume 3"
+license: "CC-BY-4.0"
+env_requires: []

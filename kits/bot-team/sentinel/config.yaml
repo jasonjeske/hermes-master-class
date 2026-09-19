@@ -1,0 +1,5 @@
+# Reviewer: the settings this bot differs on. Everything else inherits the profile defaults.
+model:
+  default: "your-frontier-model"       # set this to a model and provider you actually have; see Build 2 of Volume 3
+agent:
+  reasoning_effort: "high"

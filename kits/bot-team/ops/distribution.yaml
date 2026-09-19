@@ -1,0 +1,7 @@
+name: ops
+version: 1.0.0
+description: "Operator for a Hermes bot team. Runs the routines: briefs, sweeps, health checks, backups, weekly numbers. Silent when nothing needs a human."
+hermes_requires: ">=0.21.0"
+author: "Hermes Agent Masterclass, Volume 3"
+license: "CC-BY-4.0"
+env_requires: []

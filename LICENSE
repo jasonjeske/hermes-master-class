@@ -16,8 +16,11 @@ Human-readable summary: https://creativecommons.org/licenses/by/4.0/
 
 This covers:
 
-- The 14 illustrations in `assets/art/`
-- All 26 diagram plates in `assets/art/`
+- All 56 images in `assets/art/`: the illustrations and the diagram plates
+  for every volume
+- The whole text of Volumes 2, 3 and 4 (`desktop/`, `bots/`, `company/`
+  and their sources under `src/volumes/`), including every prompt, table
+  and template in them
 - The whole of the Build Track: the introduction, Builds 0 through 10,
   the ledger, and every prompt, template, config block and table in them
 - The consolidated reference tables, including the constants table
@@ -54,18 +57,24 @@ to ask.
 The original article artwork is deliberately not reproduced anywhere in this
 repository.
 
-The Build Track quotes short passages of the official Hermes Agent
-documentation and of one bundled skill file from the Hermes Agent repository
-where a template had to match the documented shape exactly. Hermes Agent is
+The Build Track and Volumes 2 to 4 quote short passages of the official
+Hermes Agent documentation, of bundled files from the Hermes Agent repository,
+and of the Hindsight and Mnemosyne READMEs where a template had to match the
+documented shape exactly. Volumes 3 and 4 quote short passages from named
+operators' public videos and posts, credited in place and in ATTRIBUTION.md;
+those words remain theirs. Hermes Agent is
 published by Nous Research under the MIT License; those passages remain
 theirs and are credited in Appendix I.
 
 ---
 
-## 3. Build tooling: MIT
+## 3. Code: MIT
 
-The scripts in `tools/` are released under the MIT License.
-See [LICENSE-CODE](LICENSE-CODE).
+The scripts in `tools/` and everything under `kits/` (the desktop plugins,
+the ledger plugin, the bot profiles with their configs and routines, the
+memory setup scripts, and the company files) are released under the MIT
+License. See [LICENSE-CODE](LICENSE-CODE). Install them, change them, ship
+them; credit is appreciated and not required by that license.
 
 ---
 

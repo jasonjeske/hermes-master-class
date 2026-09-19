@@ -36,7 +36,7 @@ The most common cron mistake follows straight from the fresh-session design. A p
 
 ```bash
 # 1. A morning brief that knows your project, delivered to Telegram
-hermes cron create "every 1d at 07:30" \
+hermes cron create "every day at 07:30" \
   "Read AGENTS.md in this directory. List open pull requests with gh, summarize CI status, and list any issue labeled urgent. Five lines maximum, links included. If there is nothing open and CI is green, reply with only [SILENT]." \
   --workdir /absolute/path/to/your/repo \
   --name "morning-brief"
@@ -49,7 +49,7 @@ hermes cron create "every 5m" \
   --name "disk-watchdog"
 
 # 3. The weekly tool-surface canary from Part 12, pinned to a cheap model
-hermes cron create "every 7d at 08:00" \
+hermes cron create "every sunday 08:00" \
   "List every toolset and every tool currently available to you. Compare against the list saved at ~/hermes-tool-baseline.txt. If they match, reply with only [SILENT]. If anything disappeared or appeared, report the difference and overwrite the baseline file with the new list." \
   --model your-inexpensive-model \
   --name "tool-canary"

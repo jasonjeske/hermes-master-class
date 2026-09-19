@@ -1,0 +1,7 @@
+name: sentinel
+version: 1.0.0
+description: "Reviewer for a Hermes bot team. Reviews code, copy, plans and numbers against their definition of done; approves, requests changes, or blocks."
+hermes_requires: ">=0.21.0"
+author: "Hermes Agent Masterclass, Volume 3"
+license: "CC-BY-4.0"
+env_requires: []
