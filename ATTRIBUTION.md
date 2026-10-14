@@ -81,6 +81,8 @@ the original series:
   SOUL.md and USER.md examples and both worked build prompts
 - Volumes 2, 3 and 4 in full: thirty builds, three ledgers, sixteen further
   plates and three further illustrations, and every prompt in them
+- Volume 5 in full: two tips, the ledger, two further plates and one further
+  illustration, and every prompt and command in them
 - The kits: three desktop plugins, the unified ledger plugin, six bot
   profiles with SOULs, configs, distributions and routines, the memory kit,
   and the company files (charter, org, policies, protocol, production line
