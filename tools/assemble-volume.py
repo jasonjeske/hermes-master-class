@@ -1,5 +1,5 @@
 """Assemble a volume from its parts under src/volumes/, substituting kit files into placeholders.
-Usage: python3 tools/assemble-volume.py desktop|bots|company|tips [out.md]   (default out: /tmp/<volume>.md)
+Usage: python3 tools/assemble-volume.py desktop|bots|company|tips|bonus [out.md]   (default out: /tmp/<volume>.md)
 Then: python3 tools/convert-volume.py /tmp/<v>.md /tmp/<v>.converted.md
       python3 tools/split-volume.py /tmp/<v>.converted.md <v>/ "<Title>" FULL-<NAME>.md"""
 import sys, os, re
@@ -8,7 +8,8 @@ vol=sys.argv[1]
 parts={'desktop':['desktop-a.md','desktop-workshop.md','desktop-b.md','desktop-c.md'],
        'bots':['bots-a.md','bots-b.md','bots-memory.md','bots-c.md'],
        'company':['company-a.md','company-b.md','company-c.md'],
-       'tips':['tips-a.md','tips-b.md']}[vol]
+       'tips':['tips-a.md','tips-b.md'],
+       'bonus':['bonus-a.md']}[vol]
 # ordering fix: desktop is a, b (builds 3-4), workshop (5-8), c (9)
 if vol=='desktop': parts=['desktop-a.md','desktop-b.md','desktop-workshop.md','desktop-c.md']
 subs={

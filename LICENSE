@@ -16,11 +16,11 @@ Human-readable summary: https://creativecommons.org/licenses/by/4.0/
 
 This covers:
 
-- All 59 images in `assets/art/`: the illustrations and the diagram plates
-  for every volume
-- The whole text of Volumes 2 to 5 (`desktop/`, `bots/`, `company/`, `tips/`
-  and their sources under `src/volumes/`), including every prompt, table
-  and template in them
+- All 60 images in `assets/art/`: the illustrations and the diagram plates
+  for every volume and the bonus class
+- The whole text of Volumes 2 to 5 and the bonus class (`desktop/`, `bots/`,
+  `company/`, `tips/`, `bonus/` and their sources under `src/volumes/`),
+  including every prompt, table and template in them
 - The whole of the Build Track: the introduction, Builds 0 through 10,
   the ledger, and every prompt, template, config block and table in them
 - The consolidated reference tables, including the constants table

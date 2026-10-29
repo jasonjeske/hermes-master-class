@@ -62,6 +62,15 @@ the RUDR9 and Jinn authors, the Hermes Swarm author, Gumroad's @scotty529,
 this volume; their words are quoted, their conclusions are theirs, and the
 volume's own design decisions are the compilation's.
 
+## The bonus class
+
+The bonus class, Hermes Power User, was written from the installed source of
+Hermes Agent v0.22.5: the slash command registry every surface reads, the
+TUI's own command files, and the handlers behind the commands whose help line
+leaves something out. The official Slash Commands reference was read alongside
+it, and every place the two disagree is listed in the class. No third-party
+cheat sheet was used. The ranking is the compilation's own judgment.
+
 ## What this compilation added
 
 Everything below was written while assembling this reference and is not part of
@@ -83,6 +92,9 @@ the original series:
   plates and three further illustrations, and every prompt in them
 - Volume 5 in full: two tips, the ledger, two further plates and one further
   illustration, and every prompt and command in them
+- The bonus class in full: the ranking of all 119 slash commands in twelve
+  tiers, the keys, shortcuts and docs-versus-code tables, the ledger, one
+  further illustration, and every prompt in it
 - The kits: three desktop plugins, the unified ledger plugin, six bot
   profiles with SOULs, configs, distributions and routines, the memory kit,
   and the company files (charter, org, policies, protocol, production line

@@ -2,7 +2,7 @@
 
 # Hermes Agent Masterclass
 
-Five volumes, one repository, pure GitHub Markdown. Every prompt pastes as it is, every file installs as it is, and every path, key and command was checked against the official Hermes Agent documentation for the version installed while writing, and Volume 5 against the installed source as well.
+Five volumes and a bonus class, one repository, pure GitHub Markdown. Every prompt pastes as it is, every file installs as it is, and every path, key and command was checked against the official Hermes Agent documentation for the version installed while writing, and Volume 5 and the bonus class against the installed source as well.
 
 | Volume | Read it in one page | What it gives you |
 |---|---|---|
@@ -11,12 +11,13 @@ Five volumes, one repository, pure GitHub Markdown. Every prompt pastes as it is
 | **3. Hermes Bots** | [FULL-HERMES-BOTS.md](bots/FULL-HERMES-BOTS.md) | Bot Mode as a team: six bots with every SOUL.md, model pin and routine, how they message and meet, one shared memory, one shared board, one roster across machines, shipped as installable distributions |
 | **4. The Hermes Company** | [FULL-HERMES-COMPANY.md](company/FULL-HERMES-COMPANY.md) | Your life, then your business, on those bots: an org of bots with human gates, production lines, clients, money, the cadence, the learning loop, and the whole company as one repository, grounded in named operators |
 | **5. Hermes Expert Tips** | [FULL-HERMES-TIPS.md](tips/FULL-HERMES-TIPS.md) | Two habits that change how you work with all of it: `/steer` and `/queue` to redirect a running turn and line up the next ones, and the kanban board instead of one long chat, worked on one project and checked against the source |
+| **Bonus. Hermes Power User** | [FULL-HERMES-SLASH-COMMANDS.md](bonus/FULL-HERMES-SLASH-COMMANDS.md) | Every slash command in Hermes v0.22.5, all 119, ranked from the one that changes your sessions most to the ones you will rarely need: what each one does, when to reach for it, the keys that pair with them, and where the docs and the code disagree |
 
 The kits the volumes install live in [`kits/`](kits/): three desktop plugins, a unified ledger plugin, six bot profiles with a memory kit, and the company files. Each is real code or a real config, validated with Hermes's own tooling before it went in.
 
 > 📝 **Attribution**
 >
-> Volume 1's twelve parts are the work of **[Tony Simons (@tonysimons_)](https://x.com/tonysimons_)**; every source article is linked in [Appendix I](masterclass/appendix-i-sources.md). Volumes 2 to 4 were written from the official documentation and quote two operators who published detailed field experience, **Tonbi's AI Garage** and **Wanderloots**, by name where their experience adds something the docs do not; Volume 4 quotes the operators behind the official Hermes user stories by handle, with links. Volume 5 was written from the installed Hermes source and the documentation. Nothing was invented about how Hermes behaves. Full credits in [ATTRIBUTION.md](ATTRIBUTION.md).
+> Volume 1's twelve parts are the work of **[Tony Simons (@tonysimons_)](https://x.com/tonysimons_)**; every source article is linked in [Appendix I](masterclass/appendix-i-sources.md). Volumes 2 to 4 were written from the official documentation and quote two operators who published detailed field experience, **Tonbi's AI Garage** and **Wanderloots**, by name where their experience adds something the docs do not; Volume 4 quotes the operators behind the official Hermes user stories by handle, with links. Volume 5 and the bonus class were written from the installed Hermes source and the documentation. Nothing was invented about how Hermes behaves. Full credits in [ATTRIBUTION.md](ATTRIBUTION.md).
 >
 > Hermes Agent is a project of [Nous Research](https://hermes-agent.nousresearch.com/docs/getting-started/installation). This is an unofficial study reference.
 
@@ -32,9 +33,10 @@ The kits the volumes install live in [`kits/`](kits/): three desktop plugins, a 
 | Turn your profiles into a team that works while you sleep | Volume 3, [Build 0](bots/build-00-what-a-bot-is.md) onward |
 | Run your week, then your company, on that team | Volume 4, [Build 0](company/build-00-the-case.md) onward |
 | Stop waiting on a running turn, and stop babysitting one long chat | Volume 5, [Tip 1](tips/tip-01-steer-it-queue-it.md), then [Tip 2](tips/tip-02-work-the-board-not-the-chat.md) |
+| Know every slash command, the most useful first | The bonus class, [Tier 1](bonus/tier-01-the-twelve-that-change-every-session.md) onward, or the [whole cheat sheet on one page](bonus/FULL-HERMES-SLASH-COMMANDS.md) |
 | Set up the memory that makes all of it compound | Volume 1 [Build 6](masterclass/build-06-the-memory-stack.md) for one agent, Volume 3 [Build 7](bots/build-07-shared-memory-and-a-shared-board.md) for a team |
 | Fix a specific thing | [Appendix D: Failure Triage](masterclass/appendix-d-failure-triage.md) |
-| Look something up | [Commands](masterclass/appendix-a-complete-command-index.md) · [Paths](masterclass/appendix-b-every-path-and-what-lives-there.md) · [Numbers](masterclass/appendix-c-every-number-in-one-table.md) |
+| Look something up | [Commands](masterclass/appendix-a-complete-command-index.md) · [Paths](masterclass/appendix-b-every-path-and-what-lives-there.md) · [Numbers](masterclass/appendix-c-every-number-in-one-table.md) · [Every slash command, ranked](bonus/FULL-HERMES-SLASH-COMMANDS.md) |
 
 ---
 
@@ -121,6 +123,31 @@ Two habits most people never pick up, because the chat window works well enough 
 
 ---
 
+## Bonus: Hermes Power User
+
+![Hermes Power User](assets/art/bonus-hero.webp)
+
+Every slash command Hermes has, on one page, ranked by how much it changes your work: the 104 in the command registry and the 15 that exist only in the TUI. Each row says what the command does, when to use it, and where it works: the terminal, chat, or both. Read Tier 1 and stop, and your sessions already change. Every command, alias and flag was checked against the installed source of Hermes Agent v0.22.5, and the class ends with every place the official docs and the code disagree.
+
+| Tier | Commands | What it buys you |
+|---|---|---|
+| [1 The Twelve That Change Every Session](bonus/tier-01-the-twelve-that-change-every-session.md) | `/steer`, `/queue`, `/new`, `/compress`, `/model`, `/undo` and six more | The habits that change every session |
+| [2 Hand Off Longer Work](bonus/tier-02-hand-off-longer-work.md) | `/goal`, `/bg`, `/kanban`, `/plan`, `/review`, `/loop` and five more | Longer work running without you |
+| [3 Watch Cost, Speed and Context](bonus/tier-03-watch-cost-speed-and-context.md) | `/usage`, `/context`, `/reasoning`, `/fast`, `/insights`, `/busy` | Cost, speed and context under control |
+| [4 Undo Damage and Stay Safe](bonus/tier-04-undo-damage-and-stay-safe.md) | `/rollback`, `/diff`, `/worktree`, `/snapshot`, `/approvals` and five more | Mistakes undone and risky commands gated |
+| [5 Make It Learn](bonus/tier-05-make-it-learn.md) | `/refine`, `/learn`, `/init`, `/memory`, `/skills` and four more | A Hermes that keeps what it learns |
+| [6 Sessions, Files and Sharing](bonus/tier-06-sessions-files-and-sharing.md) | `/title`, `/sessions`, `/branch`, `/handoff`, `/save` and eight more | Sessions you can find, fork, move and share |
+| [7 Tools and Integrations](bonus/tier-07-tools-and-integrations.md) | `/tools`, `/reload-mcp`, `/browser`, `/cron`, `/suggestions` and six more | Tools, browsers, schedules and integrations |
+| [8 How It Looks and Sounds](bonus/tier-08-how-it-looks-and-sounds.md) | `/focus`, `/verbose`, `/personality`, `/footer`, `/voice` and seven more | A screen and a voice set up your way |
+| [9 Chat Platforms Only](bonus/tier-09-chat-platforms-only.md) | `/sethome`, `/platform`, `/restart`, `/topic`, `/commands`, `/start` | Commands that exist only in chat |
+| [10 Account and Upkeep](bonus/tier-10-account-and-upkeep.md) | `/update`, `/version`, `/debug`, `/whoami`, `/profile` and seven more | Updates, sign-in and housekeeping |
+| [11 Just for Fun](bonus/tier-11-just-for-fun.md) | `/pet`, `/hatch` | Pets |
+| [12 Only in the TUI](bonus/tier-12-only-in-the-tui.md) | `/details`, `/connectors`, `/theme`, `/replay` and eleven more | What `hermes --tui` adds |
+
+Closing pages: [Keys That Pair With the Commands](bonus/99-keys-that-pair-with-the-commands.md) · [Shortcuts Hiding in Plain Sight](bonus/99-shortcuts-hiding-in-plain-sight.md) · [Where the Docs and the Code Disagree](bonus/99-where-the-docs-and-the-code-disagree.md) · [The Bonus Ledger](bonus/99-the-bonus-ledger.md)
+
+---
+
 ## Volume 1: The Hermes Agent Masterclass
 
 Tony Simons' twelve parts, combined into one navigable reference with a plate per part, the scattered constants pulled into tables and an exercise per part, followed by the Build Track: ten builds from a fresh install to a Hermes with an identity, seeded memory, project context, skills, plugins, a four-layer memory stack, a profile roster, cron jobs, delegation, a kanban board, and the tuning and safety settings that decide cost and blast radius.
@@ -165,7 +192,7 @@ Appendices: [A Commands](masterclass/appendix-a-complete-command-index.md) · [B
 
 ## The one sentence version
 
-A chatbot predicts the next token. Hermes runs a process: it assembles a layered prompt, resolves a provider, calls the model, dispatches whatever tools the model asked for, feeds the results back, and repeats until the model produces text instead of another tool call. Then it saves the session, updates its memory, and is ready to resume later. Volume 1 is that loop. Volume 2 is the window on it. Volume 3 is several of them, talking. Volume 4 is what they are for. Volume 5 is how you drive them.
+A chatbot predicts the next token. Hermes runs a process: it assembles a layered prompt, resolves a provider, calls the model, dispatches whatever tools the model asked for, feeds the results back, and repeats until the model produces text instead of another tool call. Then it saves the session, updates its memory, and is ready to resume later. Volume 1 is that loop. Volume 2 is the window on it. Volume 3 is several of them, talking. Volume 4 is what they are for. Volume 5 is how you drive them. The bonus class is every control you drive them with.
 
 ---
 
@@ -173,19 +200,20 @@ A chatbot predicts the next token. Hermes runs a process: it assembles a layered
 
 ```text
 README.md                         you are here
-assets/art/                       59 original images: heroes, one per part, and the diagram plates for all five volumes
+assets/art/                       60 original images: heroes, one per part, and the diagram plates for all five volumes and the bonus class
 masterclass/                      Volume 1: front matter, twelve parts, the Build Track, nine appendices, FULL-MASTERCLASS.md
 desktop/                          Volume 2: ten builds, the ledger, FULL-HERMES-DESKTOP.md
 bots/                             Volume 3: ten builds, the ledger, FULL-HERMES-BOTS.md
 company/                          Volume 4: ten builds, the ledger, FULL-HERMES-COMPANY.md
 tips/                             Volume 5: orientation, two tips, the ledger, FULL-HERMES-TIPS.md
+bonus/                            The bonus class: orientation, twelve tiers, keys, shortcuts, docs versus code, the ledger, FULL-HERMES-SLASH-COMMANDS.md
 kits/
   desktop-plugins/                hello-hermes, prompt-library, fleet-board (one plugin.js each)
   agent-plugins/ledger/           the unified package: plugin.yaml, tools, dashboard API, desktop page
   bot-team/                       atlas, forge, scout, quill, sentinel, ops, and memory/ (Hindsight and Mnemosyne setup)
   company/                        COMPANY.md, ORG.yaml, POLICIES.md, ATLAS-PROTOCOL.md, life/, cadence/, production/, clients/
 src/source.md                     the authored source of Volume 1
-src/volumes/                      the authored parts of Volumes 2 to 5; kit files are spliced in at build time
+src/volumes/                      the authored parts of Volumes 2 to 5 and the bonus class; kit files are spliced in at build time
 tools/                            the scripts that turn the sources into the volume folders
 ```
 
@@ -197,7 +225,7 @@ python3 tools/convert.py
 python3 tools/split.py
 ```
 
-To rebuild a later volume after editing `src/volumes/` or a kit file (bots shown; use `desktop`, `company` or `tips` and the matching title):
+To rebuild a later volume after editing `src/volumes/` or a kit file (bots shown; use `desktop`, `company`, `tips` or `bonus` and the matching title):
 
 ```bash
 python3 tools/assemble-volume.py bots /tmp/bots.md
@@ -213,10 +241,10 @@ Full detail in [LICENSE](LICENSE).
 
 | Layer | Status |
 |---|---|
-| The text of Volumes 2 to 5, the whole Build Track in Volume 1, all 59 images, the reference tables, the operator drills, and Appendices E through H | **CC BY 4.0.** Share and adapt freely, including commercially, with credit |
+| The text of Volumes 2 to 5 and the bonus class, the whole Build Track in Volume 1, all 60 images, the reference tables, the operator drills, and Appendices E through H | **CC BY 4.0.** Share and adapt freely, including commercially, with credit |
 | The substance of Volume 1's Parts 1 to 12 | **Tony Simons' work.** Published free by the author, reproduced here with credit, and not relicensed by this repository |
 | Everything under `kits/` and `tools/` | **MIT.** See [LICENSE-CODE](LICENSE-CODE) |
 
 ## A note on scope
 
-This is a study reference, not documentation for the Hermes project. For installation, the current API surface, and anything authoritative, go to the [official Hermes Agent docs](https://hermes-agent.nousresearch.com/docs/getting-started/installation). Volume 1's parts reflect the series as published in July 2026; every build in Volumes 1 to 4 was checked against the documentation in September 2026, and Volume 5 against the source and the documentation of v0.21.7 in October 2026. A fast-moving project will have moved since, which is exactly why the prompts read the docs before they write.
+This is a study reference, not documentation for the Hermes project. For installation, the current API surface, and anything authoritative, go to the [official Hermes Agent docs](https://hermes-agent.nousresearch.com/docs/getting-started/installation). Volume 1's parts reflect the series as published in July 2026; every build in Volumes 1 to 4 was checked against the documentation in September 2026, , Volume 5 against the source and the documentation of v0.21.7 in October 2026, and the bonus class against the source and the documentation of v0.22.5 at the end of October 2026. A fast-moving project will have moved since, which is exactly why the prompts read the docs before they write.
