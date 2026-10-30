@@ -1,0 +1,4 @@
+# defer-heavy: the curated default names first, then five heavy tools. Hermes applies it with hermes config set tools.tool_search.defer '<JSON list>', the list as JSON with no spaces (references/ladder.md, Stage 1); merging it into config.yaml by hand is the user's path. Measured in Volume 6, Stage 1.
+tools:
+  tool_search:
+    defer: ["computer_use", "session_search", "image_generate", "todo_list", "process_manage", "cronjob_manage", "browser_vault", "drive_preview", "gui_tour", "desktop_preview", "annotate_preview", "manage_catalog", "show_tip", "desktop_project", "close_terminal", "set_theme", "read_terminal", "read_window_below", "focus_pane", "manage_connections", "browser_exec", "text_to_speech", "vision_analyze", "execute_code"]

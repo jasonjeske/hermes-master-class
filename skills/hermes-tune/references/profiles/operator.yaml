@@ -1,0 +1,14 @@
+# operator: running a business or automating a company. Hermes applies this platform_toolsets.cli list with hermes config set platform_toolsets.cli '<JSON list>', the list as JSON with no spaces (references/ladder.md, Stage 2); merging it into config.yaml by hand is the user's path. Measured on the CLI in Volume 6, Stage 2.
+platform_toolsets:
+  cli:
+    - web
+    - file
+    - memory
+    - skills
+    - cronjob
+    - clarify
+    - todo
+    - session_search
+    - delegation
+    - connections
+    - terminal

@@ -1,0 +1,13 @@
+# coder: agentic coding. Hermes applies this platform_toolsets.cli list with hermes config set platform_toolsets.cli '<JSON list>', the list as JSON with no spaces (references/ladder.md, Stage 2); merging it into config.yaml by hand is the user's path. Measured on the CLI in Volume 6, Stage 2.
+platform_toolsets:
+  cli:
+    - terminal
+    - file
+    - code_execution
+    - web
+    - skills
+    - memory
+    - todo
+    - clarify
+    - session_search
+    - delegation

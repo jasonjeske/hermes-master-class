@@ -1,0 +1,8 @@
+# lean chat, a lean terminal profile: plain chat with no files, terminal or skills. Hermes applies this platform_toolsets.cli list with hermes config set platform_toolsets.cli '<JSON list>', the list as JSON with no spaces (references/ladder.md, Stage 2); merging it into config.yaml by hand is the user's path. Measured on the CLI in Volume 6, Stage 2; on a phone gateway the same list goes under that platform, for example platform_toolsets.telegram, and that was not measured.
+platform_toolsets:
+  cli:
+    - web
+    - memory
+    - clarify
+    - session_search
+    - todo

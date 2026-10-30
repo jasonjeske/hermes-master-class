@@ -16,11 +16,11 @@ Human-readable summary: https://creativecommons.org/licenses/by/4.0/
 
 This covers:
 
-- All 60 images in `assets/art/`: the illustrations and the diagram plates
-  for every volume and the bonus class
-- The whole text of Volumes 2 to 5 and the bonus class (`desktop/`, `bots/`,
-  `company/`, `tips/`, `bonus/` and their sources under `src/volumes/`),
-  including every prompt, table and template in them
+- All 65 images in `assets/art/`: the illustrations and the diagram plates
+  for every volume and the bonus class, and the charts in Volume 6
+- The whole text of Volumes 2 to 6 and the bonus class (`desktop/`, `bots/`,
+  `company/`, `tips/`, `tune/`, `bonus/` and their sources under
+  `src/volumes/`), including every prompt, table and template in them
 - The whole of the Build Track: the introduction, Builds 0 through 10,
   the ledger, and every prompt, template, config block and table in them
 - The consolidated reference tables, including the constants table
@@ -66,15 +66,19 @@ those words remain theirs. Hermes Agent is
 published by Nous Research under the MIT License; those passages remain
 theirs and are credited in Appendix I.
 
+Volume 6 credits community authors by name and link for the techniques it
+adopts, and quotes none of their words.
+
 ---
 
 ## 3. Code: MIT
 
-The scripts in `tools/` and everything under `kits/` (the desktop plugins,
+The scripts in `tools/`, everything under `kits/` (the desktop plugins,
 the ledger plugin, the bot profiles with their configs and routines, the
-memory setup scripts, and the company files) are released under the MIT
-License. See [LICENSE-CODE](LICENSE-CODE). Install them, change them, ship
-them; credit is appreciated and not required by that license.
+memory setup scripts, and the company files) and the hermes-tune skill
+under `skills/` are released under the MIT License. See
+[LICENSE-CODE](LICENSE-CODE). Install them, change them, ship them; credit
+is appreciated and not required by that license.
 
 ---
 

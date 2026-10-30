@@ -1,5 +1,5 @@
 """Assemble a volume from its parts under src/volumes/, substituting kit files into placeholders.
-Usage: python3 tools/assemble-volume.py desktop|bots|company|tips|bonus [out.md]   (default out: /tmp/<volume>.md)
+Usage: python3 tools/assemble-volume.py desktop|bots|company|tips|bonus|tune [out.md]   (default out: /tmp/<volume>.md)
 Then: python3 tools/convert-volume.py /tmp/<v>.md /tmp/<v>.converted.md
       python3 tools/split-volume.py /tmp/<v>.converted.md <v>/ "<Title>" FULL-<NAME>.md"""
 import sys, os, re
@@ -9,7 +9,8 @@ parts={'desktop':['desktop-a.md','desktop-workshop.md','desktop-b.md','desktop-c
        'bots':['bots-a.md','bots-b.md','bots-memory.md','bots-c.md'],
        'company':['company-a.md','company-b.md','company-c.md'],
        'tips':['tips-a.md','tips-b.md'],
-       'bonus':['bonus-a.md']}[vol]
+       'bonus':['bonus-a.md'],
+       'tune':['tune-a.md','tune-b.md','tune-c.md','tune-community.md','tune-ledger.md']}[vol]
 # ordering fix: desktop is a, b (builds 3-4), workshop (5-8), c (9)
 if vol=='desktop': parts=['desktop-a.md','desktop-b.md','desktop-workshop.md','desktop-c.md']
 subs={
@@ -38,6 +39,11 @@ subs={
  'ATLAS_PROTOCOL_MD': f'{KITS}/company/ATLAS-PROTOCOL.md',
  'OFFER_TEMPLATE_MD': f'{KITS}/company/clients/OFFER-TEMPLATE.md',
  'CLIENT_TEMPLATE_MD': f'{KITS}/company/clients/CLIENT-TEMPLATE.md',
+ 'TUNE_PROFILE_CODER_YAML': f'{ROOT}/skills/hermes-tune/references/profiles/coder.yaml',
+ 'TUNE_PROFILE_RESEARCHER_YAML': f'{ROOT}/skills/hermes-tune/references/profiles/researcher.yaml',
+ 'TUNE_PROFILE_OPERATOR_YAML': f'{ROOT}/skills/hermes-tune/references/profiles/operator.yaml',
+ 'TUNE_PROFILE_LEAN_CHAT_YAML': f'{ROOT}/skills/hermes-tune/references/profiles/lean-chat.yaml',
+ 'TUNE_DEFER_HEAVY_YAML': f'{ROOT}/skills/hermes-tune/references/profiles/defer-heavy.yaml',
 }
 out=[]
 for p in parts:
